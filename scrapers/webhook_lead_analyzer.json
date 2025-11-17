@@ -1,0 +1,151 @@
+{
+  "name": "RFRNCS Webhook Lead Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-webhook-leads",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rfrncs-webhook-leads"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract CSV data from webhook payload\\nconst body = $input.item.json.body || $input.item.json;\\n\\nlet csvText = '';\\n\\nif (body.csv) {\\n  csvText = body.csv;\\n} else if (body.csv_content) {\\n  csvText = body.csv_content;\\n} else if ($binary && $binary.data) {\\n  const csvData = $binary.data.data;\\n  csvText = Buffer.from(csvData, 'base64').toString('utf-8');\\n} else if (Array.isArray(body)) {\\n  const headers = Object.keys(body[0] || {});\\n  csvText = headers.join(',') + '\\n';\\n  body.forEach(row => {\\n    const values = headers.map(h => row[h] || '');\\n    csvText += values.map(v => `\\\"${v}\\\"`).join(',') + '\\n';\\n  });\\n} else {\\n  throw new Error('No CSV data found. Send as: {csv: \\\"...\\\"} or upload file or send JSON array');\\n}\\n\\nreturn {\\n  csv_text: csvText,\\n  received_at: new Date().toISOString(),\\n  source: body.source || 'webhook'\\n};"
+      },
+      "name": "Extract CSV Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse CSV text into structured data\nconst csvText = $json.csv_text;\nconst lines = csvText.split('\\n').filter(line => line.trim());\n\nif (lines.length < 2) {\n  return [{ error: 'Invalid CSV: Need at least header and one data row' }];\n}\n\nconst headers = lines[0].split(',').map(h => h.replace(/\\\"/g, '').trim());\nconst results = [];\n\nfor (let i = 1; i < lines.length; i++) {\n  const values = lines[i].split(',').map(v => v.replace(/\\\"/g, '').trim());\n  const row = {};\n  headers.forEach((header, index) => {\n    row[header] = values[index] || '';\n  });\n  results.push(row);\n}\n\nreturn results;"
+      },
+      "name": "Parse CSV Text",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "mode": "multiplex",
+        "options": {}
+      },
+      "name": "Loop Over Leads",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare lead data for analysis\nconst lead = $json;\n\nreturn {\n  company_name: lead.name || lead.company || 'Unknown Company',\n  website: lead.website || '',\n  description: lead.description || lead.about || '',\n  original_data: lead\n};"
+      },
+      "name": "Prepare Lead Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "text": "={{ 'Analyze this company and provide a detailed summary of what they do, what they sell, their products/services, target market, and business model.\\n\\nCompany: ' + $json.company_name + '\\nWebsite: ' + $json.website + '\\nDescription: ' + $json.description + '\\n\\nProvide a comprehensive analysis in JSON format with these fields:\\n- company_overview: Brief summary of what the company does\\n- products_services: List of main products/services\\n- target_market: Who they serve\\n- business_model: How they make money\\n- industry: What industry they operate in\\n- key_features: Main features or offerings\\n- competitive_advantage: What makes them unique' }}",
+        "options": {
+          "systemMessage": "You are a business analyst specializing in company research and market analysis. Provide accurate, detailed insights based on available information."
+        },
+        "hasOutputParser": true
+      },
+      "name": "Company Analysis Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "text": "={{ 'Analyze if this company would be a good fit for RFRNCS branding and marketing services. RFRNCS specializes in brand identity, logo design, website design, marketing strategy, and digital presence enhancement.\\n\\nCompany Analysis:\\n' + $json.output + '\\n\\nEvaluate:\\n1. Does this company need branding/marketing services?\\n2. What specific RFRNCS services would benefit them?\\n3. What is their budget potential?\\n4. How urgent are their needs?\\n5. What is the likelihood of conversion?\\n\\nProvide analysis in JSON format:\\n- fit_score: 1-10 (10 being perfect fit)\\n- needs_branding_services: true/false\\n- recommended_services: array of RFRNCS services\\n- budget_potential: estimated range\\n- urgency_level: high/medium/low\\n- conversion_probability: percentage\\n- reasoning: detailed explanation\\n- next_steps: recommended approach' }}",
+        "options": {
+          "systemMessage": "You are a senior business development consultant at RFRNCS, a premier branding and marketing agency. Evaluate leads for service fit and conversion potential."
+        },
+        "hasOutputParser": true
+      },
+      "name": "RFRNCS Fit Analysis Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combine all analysis results into final format\nconst companyAnalysis = $json.output;\nconst rfrncsAnalysis = $json.output;\nconst leadData = $json;\n\nreturn {\n  company_name: leadData.company_name,\n  website: leadData.website,\n  \n  // Company Analysis Results\n  company_overview: companyAnalysis.company_overview || '',\n  products_services: Array.isArray(companyAnalysis.products_services) ? companyAnalysis.products_services.join('; ') : companyAnalysis.products_services || '',\n  target_market: companyAnalysis.target_market || '',\n  business_model: companyAnalysis.business_model || '',\n  industry: companyAnalysis.industry || '',\n  key_features: Array.isArray(companyAnalysis.key_features) ? companyAnalysis.key_features.join('; ') : companyAnalysis.key_features || '',\n  competitive_advantage: companyAnalysis.competitive_advantage || '',\n  \n  // RFRNCS Fit Analysis\n  fit_score: rfrncsAnalysis.fit_score || 0,\n  needs_branding_services: rfrncsAnalysis.needs_branding_services || false,\n  recommended_services: Array.isArray(rfrncsAnalysis.recommended_services) ? rfrncsAnalysis.recommended_services.join('; ') : rfrncsAnalysis.recommended_services || '',\n  budget_potential: rfrncsAnalysis.budget_potential || '',\n  urgency_level: rfrncsAnalysis.urgency_level || '',\n  conversion_probability: rfrncsAnalysis.conversion_probability || '',\n  reasoning: rfrncsAnalysis.reasoning || '',\n  next_steps: rfrncsAnalysis.next_steps || '',\n  \n  analysis_date: new Date().toISOString()\n};"
+      },
+      "name": "Format Final Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition",
+        "options": {
+          "outputFormat": "multiline"
+        }
+      },
+      "name": "Collect All Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Create CSV content from analysis results\nconst analyses = $input.all();\n\nlet csvContent = 'Company Name,Website,Company Overview,Products Services,Target Market,Business Model,Industry,Key Features,Competitive Advantage,Fit Score,Needs Branding Services,Recommended Services,Budget Potential,Urgency Level,Conversion Probability,Reasoning,Next Steps\\n';\n\nanalyses.forEach(analysis => {\n  const row = [\n    `\"${(analysis.company_name || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.website || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.company_overview || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.products_services || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.target_market || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.business_model || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.industry || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.key_features || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.competitive_advantage || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    analysis.fit_score || 0,\n    analysis.needs_branding_services || false,\n    `\"${(analysis.recommended_services || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.budget_potential || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.urgency_level || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.conversion_probability || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.reasoning || '').replace(/\\\"/g, '\\\\\"')}\"`,\n    `\"${(analysis.next_steps || '').replace(/\\\"/g, '\\\\\"')}\"`\n  ];\n  csvContent += row.join(',') + '\\n';\n});\n\nreturn {\n  csv_content: csvContent,\n  total_leads: analyses.length,\n  generated_at: new Date().toISOString()\n};"
+      },
+      "name": "Generate CSV Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=rfrncs_webhook_analysis_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
+        "options": {}
+      },
+      "name": "Create CSV File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2250, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "vihaankulkarni29@gmail.com",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Webhook Lead Analysis: {{$json.total_leads}} Leads Processed",
+        "emailType": "text",
+        "message": "=RFRNCS Webhook Lead Analysis Report\n\nAnalysis completed for {{$json.total_leads}} leads received via webhook.\n\nThe attached CSV contains detailed company analysis and RFRNCS fit assessment for each lead.\n\nGenerated: {{$json.generated_at}}\n\nRFRNCS AI Webhook Lead Analyzer",
+        "attachments": "={{$node['Create CSV File'].binary.data}}",
+        "options": {}
+      },
+      "name": "Email Results",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2450, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [ [ { "node": "Extract CSV Data", "type": "main", "index": 0 } ] ] },
+    "Extract CSV Data": { "main": [ [ { "node": "Parse CSV Text", "type": "main", "index": 0 } ] ] },
+    "Parse CSV Text": { "main": [ [ { "node": "Loop Over Leads", "type": "main", "index": 0 } ] ] },
+    "Loop Over Leads": { "main": [ [ { "node": "Prepare Lead Data", "type": "main", "index": 0 } ] ] },
+    "Prepare Lead Data": { "main": [ [ { "node": "Company Analysis Agent", "type": "main", "index": 0 } ] ] },
+    "Company Analysis Agent": { "main": [ [ { "node": "RFRNCS Fit Analysis Agent", "type": "main", "index": 0 } ] ] },
+    "RFRNCS Fit Analysis Agent": { "main": [ [ { "node": "Format Final Results", "type": "main", "index": 0 } ] ] },
+    "Format Final Results": { "main": [ [ { "node": "Collect All Results", "type": "main", "index": 0 } ] ] },
+    "Collect All Results": { "main": [ [ { "node": "Generate CSV Function", "type": "main", "index": 0 } ] ] },
+    "Generate CSV Function": { "main": [ [ { "node": "Create CSV File", "type": "main", "index": 0 } ] ] },
+    "Create CSV File": { "main": [ [ { "node": "Email Results", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {}
+}
