@@ -1,0 +1,27 @@
+
+    ========================================
+    LEAD GENERATION PIPELINE SUMMARY
+    ========================================
+    Execution Time: 2025-11-13 20:35:44
+    
+    STATISTICS:
+    -----------
+    Total Businesses Processed: 5
+    Websites Analyzed: 4
+    Qualified Leads (Score >= 40): 3
+    Leads Added to Sheets: 3
+    Errors: 3
+    
+    RESULTS:
+    --------
+    Success: True
+    Google Sheet URL: data/qualified_leads_20251113_203543.json
+    
+    TOP LEADS:
+    ----------
+    
+    1. Cafe Madras - Score: 100 (https://cafemadras.com)
+    2. The Bombay Canteen - Score: 100 (https://thebombaycanteen.com)
+    3. Masala Library - Score: 100 (https://masalalibrary.co.in)
+
+    ========================================

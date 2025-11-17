@@ -1,0 +1,252 @@
+{
+  "name": "RFRNCS Hybrid Reddit Intelligence System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-hybrid-reddit",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rfrncs-hybrid-reddit"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract URL and configuration from webhook body\nconst body = $input.item.json.body || $input.item.json;\nconst url = body.url || body.text || body.link || '';\nconst keywords = body.keywords || ['branding', 'marketing', 'startup', 'logo design', 'rebranding'];\nconst days = body.days || 7;\nconst minUpvotes = body.min_upvotes || 5;\nconst mode = body.mode || 'auto'; // 'auto' for dynamic, 'manual' for provided data\n\nif (!url && mode === 'auto') {\n  throw new Error('No URL provided in request. Send JSON: {\"url\": \"https://...\", \"mode\": \"auto\"} OR {\"posts\": [...], \"mode\": \"manual\"}');\n}\n\nif (mode === 'auto' && !url.match(/^https?:\\/\\/.+/i)) {\n  throw new Error('Invalid URL format. Must start with http:// or https://');\n}\n\nreturn {\n  url: url,\n  keywords: keywords,\n  days: days,\n  min_upvotes: minUpvotes,\n  mode: mode,\n  posts: body.posts || null,\n  requested_at: new Date().toISOString()\n};"
+      },
+      "name": "Extract Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Split Processing Mode",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract subreddit from URL for auto mode\nconst url = $input.item.json.url;\nlet subreddit = null;\n\ntry {\n  const urlObj = new URL(url);\n  if (urlObj.hostname.includes('reddit.com')) {\n    const pathParts = urlObj.pathname.split('/').filter(p => p);\n    if (pathParts[0] === 'r' && pathParts[1]) {\n      subreddit = pathParts[1];\n    }\n  }\n} catch (e) {\n  throw new Error('Invalid Reddit URL');\n}\n\nif (!subreddit) {\n  throw new Error('No subreddit found in URL. URL should be like: https://www.reddit.com/r/subreddit/');\n}\n\nreturn {\n  url: url,\n  subreddit: subreddit,\n  keywords: $json.keywords,\n  days: $json.days,\n  min_upvotes: $json.min_upvotes,\n  mode: 'auto'\n};"
+      },
+      "name": "Extract Subreddit",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "url": "=https://www.reddit.com/r/{{$json.subreddit}}/top.json",
+        "method": "GET",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "n8n-reddit-scraper/1.0 (https://www.rfrncs.in/)"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "50"
+            },
+            {
+              "name": "t",
+              "value": "week"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 3
+            }
+          }
+        }
+      },
+      "name": "Fetch Subreddit Posts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process manual posts or skip to next step\nconst mode = $input.item.json.mode;\nconst manualPosts = $input.item.json.posts;\n\nif (mode === 'manual' && manualPosts) {\n  // Process manually provided posts\n  const processedPosts = manualPosts.map(post => ({\n    id: post.id || Math.random().toString(36),\n    title: post.title || '',\n    selftext: post.selftext || post.content || '',\n    score: post.score || post.upvotes || 0,\n    num_comments: post.num_comments || post.comments || 0,\n    author: post.author || 'unknown',\n    url: post.url || '',\n    permalink: post.permalink || '',\n    created_utc: post.created_utc || Math.floor(Date.now() / 1000),\n    subreddit: post.subreddit || 'manual',\n    source: 'manual'\n  }));\n  \n  return {\n    subreddit: 'manual',\n    keywords: $input.item.json.keywords,\n    days: $input.item.json.days,\n    min_upvotes: $input.item.json.min_upvotes,\n    mode: 'manual',\n    posts: processedPosts\n  };\n}\n\nreturn $input.item.json;"
+      },
+      "name": "Process Manual Posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Reddit API response and extract post data\nconst response = $input.item.json;\nconst subreddit = $input.item.json.subreddit;\n\nif (!response.data || !response.data.children) {\n  throw new Error('Invalid Reddit API response');\n}\n\nconst posts = response.data.children.map(child => {\n  const data = child.data;\n  return {\n    id: data.id,\n    title: data.title,\n    selftext: data.selftext || '',\n    score: data.score || 0,\n    num_comments: data.num_comments || 0,\n    author: data.author,\n    url: data.url,\n    permalink: data.permalink,\n    created_utc: data.created_utc,\n    subreddit: data.subreddit,\n    source: 'reddit_api'\n  };\n});\n\nreturn {\n  subreddit: subreddit,\n  keywords: $input.item.json.keywords,\n  days: $input.item.json.days,\n  min_upvotes: $input.item.json.min_upvotes,\n  mode: 'auto',\n  posts: posts\n};"
+      },
+      "name": "Parse Reddit Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition",
+        "options": {
+          "outputFormat": "multiline"
+        }
+      },
+      "name": "Merge Data Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// RFRNCS AI Classification and Quality Filtering\nconst posts = $json.posts || [];\nconst keywords = $json.keywords || ['branding', 'marketing', 'startup'];\nconst minUpvotes = $json.min_upvotes || 5;\nconst mode = $json.mode || 'auto';\n\nconst relevantPosts = [];\n\nposts.forEach(post => {\n  // Quality filtering\n  if (post.score >= minUpvotes && post.selftext && post.selftext.trim().length > 10) {\n    // Keyword matching\n    const fullText = `${post.title} ${post.selftext}`.toLowerCase();\n    const keywordMatches = keywords.filter(keyword => \n      fullText.includes(keyword.toLowerCase())\n    );\n    \n    if (keywordMatches.length > 0) {\n      // Enhanced scoring for RFRNCS relevance\n      let relevanceScore = keywordMatches.length * 2;\n      \n      // Business intent scoring\n      const businessKeywords = ['startup', 'business', 'company', 'entrepreneur', 'founder', 'launch'];\n      if (businessKeywords.some(keyword => fullText.includes(keyword))) {\n        relevanceScore += 3;\n      }\n      \n      // Service opportunity scoring\n      const serviceKeywords = ['design', 'website', 'logo', 'brand', 'marketing', 'advertising'];\n      if (serviceKeywords.some(keyword => fullText.includes(keyword))) {\n        relevanceScore += 4;\n      }\n      \n      // Pain point scoring\n      const painKeywords = ['need help', 'struggling', 'looking for', 'bad design', 'poor branding'];\n      if (painKeywords.some(keyword => fullText.includes(keyword))) {\n        relevanceScore += 3;\n      }\n      \n      // Urgency indicators\n      const urgencyKeywords = ['asap', 'urgent', 'quickly', 'soon', 'deadline'];\n      if (urgencyKeywords.some(keyword => fullText.includes(keyword))) {\n        relevanceScore += 2;\n      }\n      \n      relevantPosts.push({\n        ...post,\n        keyword_matches: keywordMatches,\n        relevance_score: relevanceScore,\n        priority_level: relevanceScore >= 8 ? 'HIGH' : relevanceScore >= 5 ? 'MEDIUM' : 'LOW',\n        rfrncs_opportunity: relevanceScore >= 6\n      });\n    }\n  }\n});\n\n// Sort by relevance score\nrelevantPosts.sort((a, b) => b.relevance_score - a.relevance_score);\n\nreturn {\n  subreddit: $json.subreddit,\n  keywords: keywords,\n  mode: mode,\n  total_posts_analyzed: posts.length,\n  relevant_posts_found: relevantPosts.length,\n  high_priority_posts: relevantPosts.filter(p => p.priority_level === 'HIGH').length,\n  posts: relevantPosts,\n  processed_at: new Date().toISOString()\n};"
+      },
+      "name": "RFRNCS Intelligence Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "opportunity-filter",
+              "leftValue": "={{$json.relevant_posts_found}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "larger",
+                "name": "n8n-nodes-base.larger"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Check for Opportunities",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build AI analysis prompt for RFRNCS\nconst data = $input.item.json;\n\nconst prompt = `You are a senior marketing strategist at RFRNCS (https://www.rfrncs.in/), a premier branding and marketing agency. Analyze these Reddit posts to identify business opportunities for RFRNCS.\n\nReturn ONLY valid JSON with:\n{\n  \"executive_summary\": \"Brief overview of key opportunities\",\n  \"hot_leads\": [{\"type\": \"Startup/SMB/Enterprise\", \"pain_points\": [\"issue1\"], \"services\": \"Branding/Marketing/Design\", \"urgency\": \"high/medium/low\"}],\n  \"market_trends\": [{\"trend\": \"description\", \"frequency\": 8, \"rfrncs_opportunity\": \"How RFRNCS can capitalize\"}],\n  \"competitive_insights\": [{\"insight\": \"market observation\", \"advantage\": \"RFRNCS differentiation\"}],\n  \"action_items\": [\"specific recommendations for RFRNCS\"],\n  \"confidence_score\": 0.88\n}\n\nPosts to Analyze:\n${data.posts.map((post, i) => \n  `${i+1}. [${post.priority_level}] ${post.title}\\nScore: ${post.relevance_score}\\nContent: ${post.selftext.substring(0, 500)}...`\n).join('\\n\\n')}\n\nFocus on identifying actionable business opportunities for RFRNCS marketing services.`;\n\nreturn {\n  ...data,\n  ai_prompt: prompt\n};"
+      },
+      "name": "Build AI Analysis Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$env.GEMINI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\"contents\":[{\"parts\":[{\"text\":{{$json.ai_prompt}}}]}]}",
+        "options": {}
+      },
+      "name": "Gemini AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse AI response and create comprehensive reports\nconst response = $input.item.json;\nconst data = $input.item.json;\n\nlet analysis = {\n  executive_summary: \"Analysis in progress\",\n  hot_leads: [],\n  market_trends: [],\n  competitive_insights: [],\n  action_items: [],\n  confidence_score: 0\n};\n\ntry {\n  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  const cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  analysis = JSON.parse(cleanText);\n} catch (e) {\n  console.error('AI Analysis parse error:', e);\n}\n\n// Create CSV data\nlet csvContent = 'Priority,Title,Score,Opportunity,Author,Source\\n';\ndata.posts.forEach(post => {\n  csvContent += `${post.priority_level},\"${post.title.replace(/\"/g, '\"\"')}\",${post.relevance_score},${post.rfrncs_opportunity},${post.author},${post.source}\\n`;\n});\n\n// Add analysis data\ncsvContent += '\\nAnalysis Summary\\n';\ncsvContent += `Total Posts Analyzed,${data.total_posts_analyzed}\\n`;\ncsvContent += `Relevant Posts Found,${data.relevant_posts_found}\\n`;\ncsvContent += `High Priority Posts,${data.high_priority_posts}\\n`;\ncsvContent += `AI Confidence Score,${analysis.confidence_score}\\n`;\n\n// Create detailed report\nconst report = `RFRNCS REDDIT MARKETING INTELLIGENCE REPORT\\n`;\nreport += `==============================================\\n\\n`;\nreport += `Generated: ${new Date().toISOString()}\\n`;\nreport += `Subreddit: r/${data.subreddit}\\n`;\nreport += `Processing Mode: ${data.mode}\\n`;\nreport += `Keywords: ${data.keywords.join(', ')}\\n\\n`;\n\nreport += `EXECUTIVE SUMMARY\\n`;\nreport += `${'='.repeat(16)}\\n${analysis.executive_summary}\\n\\n`;\n\nreport += `INTELLIGENCE OVERVIEW\\n`;\nreport += `${'='.repeat(20)}\\n`;\nreport += `• Posts Analyzed: ${data.total_posts_analyzed}\\n`;\nreport += `• Relevant Posts: ${data.relevant_posts_found}\\n`;\nreport += `• High Priority: ${data.high_priority_posts}\\n`;\nreport += `• AI Confidence: ${analysis.confidence_score}\\n\\n`;\n\nreport += `HOT LEADS IDENTIFIED\\n`;\nreport += `${'='.repeat(21)}\\n`;\nanalysis.hot_leads.forEach((lead, i) => {\n  report += `${i+1}. ${lead.type}\\n`;\n  report += `   Pain Points: ${lead.pain_points.join(', ')}\\n`;\n  report += `   Services: ${lead.services}\\n`;\n  report += `   Urgency: ${lead.urgency}\\n\\n`;\n});\n\nreport += `MARKET TRENDS\\n`;\nreport += `${'='.repeat(13)}\\n`;\nanalysis.market_trends.forEach((trend, i) => {\n  report += `${i+1}. ${trend.trend}\\n`;\n  report += `   Frequency: ${trend.frequency}\\n`;\n  report += `   RFRNCS Opportunity: ${trend.rfrncs_opportunity}\\n\\n`;\n});\n\nreport += `ACTION ITEMS\\n`;\nreport += `${'='.repeat(12)}\\n`;\nanalysis.action_items.forEach((item, i) => {\n  report += `${i+1}. ${item}\\n`;\n});\n\nreturn {\n  subreddit: data.subreddit,\n  mode: data.mode,\n  keywords: data.keywords,\n  csv_data: csvContent,\n  report_data: report,\n  analysis: analysis,\n  total_posts: data.total_posts_analyzed,\n  relevant_posts: data.relevant_posts_found,\n  high_priority: data.high_priority_posts,\n  generated_at: new Date().toISOString()\n};"
+      },
+      "name": "Generate Final Reports",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2450, 300]
+    },
+    {
+      "parameters": {
+        "mode": "csv",
+        "fileName": "=rfrncs_intelligence_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
+        "options": {}
+      },
+      "name": "Save CSV Report",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2650, 200]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=rfrncs_report_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.txt",
+        "options": {}
+      },
+      "name": "Save Detailed Report",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2650, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@gmail.com",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Reddit Intelligence: {{$json.high_priority}} Hot Leads Found!",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h2 style=\"color: #2563eb;\">🎯 RFRNCS Reddit Marketing Intelligence</h2>\n  \n  <div style=\"background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0;\">📊 Analysis Results</h3>\n    <p><strong>Source:</strong> {{$json.mode === 'manual' ? 'Manual Data' : 'r/' + $json.subreddit}}</p>\n    <p><strong>Total Posts:</strong> {{$json.total_posts}}</p>\n    <p><strong>Relevant Posts:</strong> {{$json.relevant_posts}}</p>\n    <p><strong>🔥 High Priority Leads:</strong> {{$json.high_priority}}</p>\n    <p><strong>Keywords:</strong> {{$json.keywords.join(', ')}}</p>\n  </div>\n  \n  <div style=\"background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0; color: #92400e;\">💰 Executive Summary</h3>\n    <p>{{$json.analysis.executive_summary}}</p>\n  </div>\n  \n  <div style=\"background: #dcfce7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0; color: #166534;\">🎯 Hot Leads Identified</h3>\n    <p><strong>{{$json.analysis.hot_leads.length}} potential business opportunities</strong></p>\n  </div>\n  \n  <p>📎 <strong>Attachments:</strong></p>\n  <ul>\n    <li>CSV Report: Structured data for analysis</li>\n    <li>Detailed Report: Complete intelligence summary</li>\n  </ul>\n  \n  <p style=\"color: #6b7280; font-size: 12px;\">Generated: {{$now.format('YYYY-MM-DD HH:mm:ss')}} | RFRNCS AI Marketing Intelligence</p>\n</div>",
+        "attachments": "={{$node['Save CSV Report'].binary.data}},{{$node['Save Detailed Report'].binary.data}}",
+        "options": {}
+      },
+      "name": "Email Intelligence Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [ [ { "node": "Extract Configuration", "type": "main", "index": 0 } ] ] },
+    "Extract Configuration": { "main": [ [ { "node": "Check Processing Mode", "type": "main", "index": 0 } ] ] },
+    "Check Processing Mode": { "main": [ [ { "node": "Extract Subreddit", "type": "main", "index": 0 } ], [ { "node": "Process Manual Posts", "type": "main", "index": 0 } ] ] },
+    "Extract Subreddit": { "main": [ [ { "node": "Fetch Subreddit Posts", "type": "main", "index": 0 } ] ] },
+    "Fetch Subreddit Posts": { "main": [ [ { "node": "Parse Reddit Response", "type": "main", "index": 0 } ] ] },
+    "Process Manual Posts": { "main": [ [ { "node": "Merge Data Sources", "type": "main", "index": 1 } ] ] },
+    "Parse Reddit Response": { "main": [ [ { "node": "Merge Data Sources", "type": "main", "index": 0 } ] ] },
+    "Merge Data Sources": { "main": [ [ { "node": "RFRNCS Intelligence Processing", "type": "main", "index": 0 } ] ] },
+    "RFRNCS Intelligence Processing": { "main": [ [ { "node": "Check for Opportunities", "type": "main", "index": 0 } ] ] },
+    "Check for Opportunities": { "main": [ [ { "node": "Build AI Analysis Prompt", "type": "main", "index": 0 } ] ] },
+    "Build AI Analysis Prompt": { "main": [ [ { "node": "Gemini AI Analysis", "type": "main", "index": 0 } ] ] },
+    "Gemini AI Analysis": { "main": [ [ { "node": "Generate Final Reports", "type": "main", "index": 0 } ] ] },
+    "Generate Final Reports": { "main": [ [ { "node": "Save CSV Report", "type": "main", "index": 0 }, { "node": "Save Detailed Report", "type": "main", "index": 0 } ] ] },
+    "Save CSV Report": { "main": [ [ { "node": "Email Intelligence Report", "type": "main", "index": 0 } ] ] },
+    "Save Detailed Report": { "main": [ [ { "node": "Email Intelligence Report", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {}
+}

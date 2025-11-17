@@ -1,0 +1,255 @@
+{
+  "name": "Lead Ingest - Option A (Webhook → Normalize → Score → Return)",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "lead-ingest",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Detect source type from input query (URL or hashtag)\nfunction detect(input) {\n  const text = String(input || '').trim();\n  if (!text) return { source_type: 'generic', value: '' };\n  if (text.startsWith('#')) {\n    return { source_type: 'instagram_hashtag', value: text.slice(1) };\n  }\n  let url = text;\n  try { url = new URL(text).href; } catch(e) {}\n  const lower = url.toLowerCase();\n  if (lower.includes('ycombinator.com/companies')) return { source_type: 'yc', value: url };\n  if (lower.includes('modemonline')) return { source_type: 'modemonline', value: url };\n  if (lower.includes('justdial.com')) return { source_type: 'justdial', value: url };\n  if (lower.includes('zomato.com')) return { source_type: 'zomato', value: url };\n  if (lower.includes('instagram.com')) return { source_type: 'instagram', value: url };\n  if (lower.includes('linkedin.com')) return { source_type: 'linkedin', value: url };\n  if (lower.includes('twitter.com') || lower.includes('x.com')) return { source_type: 'twitter', value: url };\n  if (lower.includes('reddit.com')) return { source_type: 'reddit', value: url };\n  return { source_type: 'generic', value: url };\n}\nreturn items.map(i => {\n  const q = (i.json && (i.json.query || i.json.text || i.json.url)) || '';\n  const res = detect(q);\n  return { json: { ...i.json, ...res } };\n});\n"
+      },
+      "name": "Detect Source",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.source_type}}",
+              "operation": "equal",
+              "value2": "instagram_hashtag"
+            },
+            {
+              "value1": "={{$json.source_type}}",
+              "operation": "equal",
+              "value2": "linkedin_hashtag"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF Hashtag?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        760,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Build minimal hashtag item\nreturn items.map(i => {\n  const j = i.json || {};\n  const tag = j.value || j.hashtag || '';\n  const platform = j.source_type || 'instagram_hashtag';\n  const out = {\n    sourceType: platform,\n    source_url: `#${tag}`,\n    account_name: '',\n    bio: '',\n    profile_website: '',\n    profile_url: '',\n    followers: 0,\n    industry: 'Unspecified'\n  };\n  return { json: out };\n});\n"
+      },
+      "name": "Build Hashtag Item",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        70
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.value || $json.url || $json.source_url}}",
+        "responseFormat": "string",
+        "options": {}
+      },
+      "name": "HTTP Fetch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Quick parse HTML: title, meta description, canonical\nfunction extractMeta(html, name, attr, value) {\n  const regex = new RegExp(`<${name}[^>]*${attr}=[\\\"']${value}[\\\"'][^>]*>`, 'i');\n  const m = html.match(regex);\n  if (!m) return null;\n  const tag = m[0];\n  const contentMatch = tag.match(/content=[\\\"']([^\\\"']*)[\\\"']/i);\n  return contentMatch ? contentMatch[1] : null;\n}\nfunction extractTitle(html){\n  const m = html.match(/<title[^>]*>([\\s\\S]*?)<\\/title>/i);\n  return m ? m[1].trim() : '';\n}\nfunction extractCanonical(html){\n  const m = html.match(/<link[^>]+rel=[\\\"']canonical[\\\"'][^>]*href=[\\\"']([^\\\"']+)[\\\"'][^>]*>/i);\n  return m ? m[1] : '';\n}\nfunction sanitize(s){\n  return (s||'').replace(/[\\n\\r\\t]+/g,' ').trim();\n}\nreturn items.map(i => {\n  const j = i.json || {};\n  const html = String(j.body || j.html || '');\n  let name = extractMeta(html, 'meta', 'property', 'og:site_name') || extractTitle(html);\n  let desc = extractMeta(html, 'meta', 'name', 'description') || extractMeta(html, 'meta', 'property', 'og:description') || '';\n  const canonical = extractCanonical(html);\n  name = sanitize(name);\n  desc = sanitize(desc);\n  const out = {\n    sourceType: j.source_type || j.sourceType || 'generic',\n    source_url: j.value || j.url || j.source_url || '',\n    name,\n    description: desc,\n    website: canonical || j.value || j.url || '',\n    metrics: {},\n    assets: {}\n  };\n  return { json: out };\n});\n"
+      },
+      "name": "Quick Parse HTML",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough"
+      },
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Normalize to common schema\nfunction normalize(item) {\n  const src = (item.sourceType || item.source_type || '').toLowerCase();\n  const out = {\n    source: src || 'generic',\n    source_url: item.url || item.source_url || '',\n    name: '',\n    industry_category: '',\n    description: '',\n    website: item.website || '',\n    website_present: !!(item.website),\n    socials: item.socials || {},\n    contact_info: item.contact_info || {},\n    metrics: item.metrics || {},\n    assets: item.assets || {},\n  };\n  switch (src) {\n    case 'yc':\n      out.name = item.name || '';\n      out.industry_category = item.industry || item.category || 'Unspecified';\n      out.description = item.description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      break;\n    case 'modemonline':\n      out.name = item.name || '';\n      out.industry_category = item.category || 'Fashion/Apparel';\n      out.description = item.description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      out.contact_info = { email: item.email || '', phone: item.phone || '' };\n      break;\n    case 'justdial':\n    case 'zomato':\n      out.name = item.name || '';\n      out.industry_category = item.cuisines || 'Restaurants';\n      out.description = item.listing_description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      out.contact_info = { phone: item.phone || '', email: item.email || '' };\n      out.metrics = {\n        reviews: item.reviews || 0,\n        rating: item.rating || null,\n        price_level: item.price_level || null,\n      };\n      break;\n    case 'instagram_hashtag':\n    case 'linkedin_hashtag':\n      out.name = item.account_name || item.handle || '';\n      out.industry_category = item.industry || 'Unspecified';\n      out.description = item.bio || item.tagline || '';\n      out.website = item.profile_website || '';\n      out.website_present = !!out.website;\n      out.socials = Object.assign({}, out.socials, {\n        profile: item.profile_url || '',\n      });\n      out.metrics = Object.assign({}, out.metrics, {\n        followers: item.followers || 0,\n      });\n      break;\n    case 'reddit':\n    case 'twitter':\n      out.name = item.account_name || item.author || '';\n      out.industry_category = item.industry || 'Unspecified';\n      out.description = item.bio || item.thread_excerpt || item.caption || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      out.socials = Object.assign({}, out.socials, {\n        profile: item.profile_url || '',\n      });\n      out.metrics = Object.assign({}, out.metrics, {\n        followers: item.followers || 0,\n        upvotes: item.upvotes || 0,\n      });\n      break;\n    default:\n      out.name = item.name || '';\n      out.industry_category = item.industry || item.category || 'Unspecified';\n      out.description = item.description || item.summary || '';\n      break;\n  }\n  out.socials = out.socials || {};\n  out.contact_info = out.contact_info || {};\n  return out;\n}\nreturn items.map(i => ({ json: normalize(i.json || i) }));\n"
+      },
+      "name": "Normalize",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Compute branding score\nfunction computeScore(n) {\n  let score = 0;\n  if (!n.website_present) score += 3;\n  const desc = (n.description || '').trim();\n  if (desc.length > 0 && desc.length < 150) score += 2;\n  const hasSocials = n.socials && Object.keys(n.socials).length > 0 && Object.values(n.socials).some(Boolean);\n  if (!hasSocials) score += 2;\n  const followers = Number(n.metrics?.followers || 0);\n  const reviews = Number(n.metrics?.reviews || 0);\n  const brandingQuality = n.assets?.branding_quality || 'unknown';\n  if ((followers >= 5000 || reviews >= 200) && (brandingQuality === 'poor' || brandingQuality === 'unknown')) {\n    score += 2;\n  }\n  return score;\n}\nreturn items.map(i => {\n  const n = i.json || i;\n  const score = computeScore(n);\n  return { json: { ...n, score } };\n});\n"
+      },
+      "name": "Score",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Finalize: timestamp + hash\nfunction djb2(str) {\n  let hash = 5381;\n  for (let i = 0; i < str.length; i++) {\n    hash = ((hash << 5) + hash) + str.charCodeAt(i);\n    hash = hash & hash;\n  }\n  return (hash >>> 0).toString(16);\n}\nreturn items.map(i => {\n  const j = i.json || i;\n  const now = new Date().toISOString();\n  const name = (j.name || '').toLowerCase();\n  const site = (j.website || j.source_url || '').toLowerCase();\n  const src = (j.source || j.source_type || 'generic').toLowerCase();\n  const key = djb2([name, site, src].join('|'));\n  return { json: { ...j, timestamp: now, hash_key: key } };\n});\n"
+      },
+      "name": "Finalize",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Detect Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Source": {
+      "main": [
+        [
+          {
+            "node": "IF Hashtag?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Hashtag?": {
+      "main": [
+        [
+          {
+            "node": "Build Hashtag Item",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Fetch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Fetch": {
+      "main": [
+        [
+          {
+            "node": "Quick Parse HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Hashtag Item": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quick Parse HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score": {
+      "main": [
+        [
+          {
+            "node": "Finalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null
+}

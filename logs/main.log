@@ -1,0 +1,2789 @@
+2025-11-15 20:55:05 - __main__ - INFO - Starting scrape for 50 coffee shops from: https://www.justdial.com/Mumbai/Japanese-Restaurants/nct-10192680
+2025-11-15 20:55:06 - __main__ - INFO - Chrome WebDriver initialized
+2025-11-15 20:55:10 - __main__ - INFO - Page loaded, starting to extract listings...
+2025-11-15 20:55:10 - __main__ - INFO - Attempt 1/20 - Collected: 0/50
+2025-11-15 20:55:10 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:15 - __main__ - INFO - Attempt 2/20 - Collected: 0/50
+2025-11-15 20:55:15 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:20 - __main__ - INFO - Attempt 3/20 - Collected: 0/50
+2025-11-15 20:55:20 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:25 - __main__ - INFO - Attempt 4/20 - Collected: 0/50
+2025-11-15 20:55:25 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:30 - __main__ - INFO - Attempt 5/20 - Collected: 0/50
+2025-11-15 20:55:30 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:35 - __main__ - INFO - Attempt 6/20 - Collected: 0/50
+2025-11-15 20:55:36 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:41 - __main__ - INFO - Attempt 7/20 - Collected: 0/50
+2025-11-15 20:55:41 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:46 - __main__ - INFO - Attempt 8/20 - Collected: 0/50
+2025-11-15 20:55:46 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:51 - __main__ - INFO - Attempt 9/20 - Collected: 0/50
+2025-11-15 20:55:51 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:55:56 - __main__ - INFO - Attempt 10/20 - Collected: 0/50
+2025-11-15 20:55:56 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:01 - __main__ - INFO - Attempt 11/20 - Collected: 0/50
+2025-11-15 20:56:01 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:06 - __main__ - INFO - Attempt 12/20 - Collected: 0/50
+2025-11-15 20:56:06 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:11 - __main__ - INFO - Attempt 13/20 - Collected: 0/50
+2025-11-15 20:56:11 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:16 - __main__ - INFO - Attempt 14/20 - Collected: 0/50
+2025-11-15 20:56:17 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:22 - __main__ - INFO - Attempt 15/20 - Collected: 0/50
+2025-11-15 20:56:22 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:27 - __main__ - INFO - Attempt 16/20 - Collected: 0/50
+2025-11-15 20:56:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:32 - __main__ - INFO - Attempt 17/20 - Collected: 0/50
+2025-11-15 20:56:32 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:37 - __main__ - INFO - Attempt 18/20 - Collected: 0/50
+2025-11-15 20:56:37 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:42 - __main__ - INFO - Attempt 19/20 - Collected: 0/50
+2025-11-15 20:56:42 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:47 - __main__ - INFO - Attempt 20/20 - Collected: 0/50
+2025-11-15 20:56:47 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 20:56:52 - __main__ - INFO - Scraping complete! Collected 0 unique coffee shops
+2025-11-15 21:08:42 - __main__ - INFO - Starting scrape for 50 coffee shops from: https://www.justdial.com/Mumbai/Japanese-Restaurants/nct-10192680
+2025-11-15 21:08:43 - __main__ - INFO - Chrome WebDriver initialized
+2025-11-15 21:08:47 - __main__ - INFO - Page loaded, starting to extract listings...
+2025-11-15 21:08:47 - __main__ - INFO - Attempt 1/20 - Collected: 0/50
+2025-11-15 21:08:48 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:08:48 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:08:52 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:08:52 - __main__ - INFO - Attempt 2/20 - Collected: 0/50
+2025-11-15 21:08:52 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:08:52 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:08:56 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:08:56 - __main__ - INFO - Attempt 3/20 - Collected: 0/50
+2025-11-15 21:08:56 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:08:56 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:00 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:00 - __main__ - INFO - Attempt 4/20 - Collected: 0/50
+2025-11-15 21:09:00 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:00 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:04 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:04 - __main__ - INFO - Attempt 5/20 - Collected: 0/50
+2025-11-15 21:09:04 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:04 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:08 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:08 - __main__ - INFO - Attempt 6/20 - Collected: 0/50
+2025-11-15 21:09:08 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:08 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:12 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:12 - __main__ - INFO - Attempt 7/20 - Collected: 0/50
+2025-11-15 21:09:12 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:12 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:16 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:16 - __main__ - INFO - Attempt 8/20 - Collected: 0/50
+2025-11-15 21:09:16 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:16 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:20 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:20 - __main__ - INFO - Attempt 9/20 - Collected: 0/50
+2025-11-15 21:09:20 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:20 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:24 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:24 - __main__ - INFO - Attempt 10/20 - Collected: 0/50
+2025-11-15 21:09:24 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:24 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:28 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:28 - __main__ - INFO - Attempt 11/20 - Collected: 0/50
+2025-11-15 21:09:29 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:29 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:33 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:33 - __main__ - INFO - Attempt 12/20 - Collected: 0/50
+2025-11-15 21:09:33 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:33 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:37 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:37 - __main__ - INFO - Attempt 13/20 - Collected: 0/50
+2025-11-15 21:09:37 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:37 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:41 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:41 - __main__ - INFO - Attempt 14/20 - Collected: 0/50
+2025-11-15 21:09:41 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:41 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:45 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:45 - __main__ - INFO - Attempt 15/20 - Collected: 0/50
+2025-11-15 21:09:45 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:45 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:49 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:49 - __main__ - INFO - Attempt 16/20 - Collected: 0/50
+2025-11-15 21:09:49 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:49 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:53 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:53 - __main__ - INFO - Attempt 17/20 - Collected: 0/50
+2025-11-15 21:09:53 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:53 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:09:57 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:09:57 - __main__ - INFO - Attempt 18/20 - Collected: 0/50
+2025-11-15 21:09:57 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:09:57 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:10:01 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:10:01 - __main__ - INFO - Attempt 19/20 - Collected: 0/50
+2025-11-15 21:10:02 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:10:02 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:10:06 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:10:06 - __main__ - INFO - Attempt 20/20 - Collected: 0/50
+2025-11-15 21:10:06 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:10:06 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:10:10 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:10:10 - __main__ - INFO - Scraping complete! Collected 0 unique coffee shops
+2025-11-15 21:11:38 - __main__ - INFO - Starting scrape for 50 coffee shops from: https://www.justdial.com/Mumbai/Japanese-Restaurants/nct-10192680
+2025-11-15 21:11:39 - __main__ - INFO - Chrome WebDriver initialized
+2025-11-15 21:11:59 - __main__ - INFO - Page loaded, starting to extract listings...
+2025-11-15 21:11:59 - __main__ - INFO - Attempt 1/20 - Collected: 0/50
+2025-11-15 21:11:59 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:11:59 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:03 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:03 - __main__ - INFO - Attempt 2/20 - Collected: 0/50
+2025-11-15 21:12:03 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:03 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:07 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:07 - __main__ - INFO - Attempt 3/20 - Collected: 0/50
+2025-11-15 21:12:08 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:08 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:12 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:12 - __main__ - INFO - Attempt 4/20 - Collected: 0/50
+2025-11-15 21:12:12 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:12 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:16 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:16 - __main__ - INFO - Attempt 5/20 - Collected: 0/50
+2025-11-15 21:12:16 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:16 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:20 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:20 - __main__ - INFO - Attempt 6/20 - Collected: 0/50
+2025-11-15 21:12:20 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:20 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:24 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:24 - __main__ - INFO - Attempt 7/20 - Collected: 0/50
+2025-11-15 21:12:24 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:24 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:28 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:28 - __main__ - INFO - Attempt 8/20 - Collected: 0/50
+2025-11-15 21:12:28 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:28 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:32 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:32 - __main__ - INFO - Attempt 9/20 - Collected: 0/50
+2025-11-15 21:12:32 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:32 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:36 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:36 - __main__ - INFO - Attempt 10/20 - Collected: 0/50
+2025-11-15 21:12:36 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:36 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:40 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:40 - __main__ - INFO - Attempt 11/20 - Collected: 0/50
+2025-11-15 21:12:40 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:40 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:44 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:44 - __main__ - INFO - Attempt 12/20 - Collected: 0/50
+2025-11-15 21:12:45 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:45 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:49 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:49 - __main__ - INFO - Attempt 13/20 - Collected: 0/50
+2025-11-15 21:12:49 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:49 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:53 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:53 - __main__ - INFO - Attempt 14/20 - Collected: 0/50
+2025-11-15 21:12:53 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:53 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:12:57 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:12:57 - __main__ - INFO - Attempt 15/20 - Collected: 0/50
+2025-11-15 21:12:57 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:12:57 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:13:01 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:13:01 - __main__ - INFO - Attempt 16/20 - Collected: 0/50
+2025-11-15 21:13:01 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:13:01 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:13:05 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:13:05 - __main__ - INFO - Attempt 17/20 - Collected: 0/50
+2025-11-15 21:13:05 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:13:05 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:13:09 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:13:09 - __main__ - INFO - Attempt 18/20 - Collected: 0/50
+2025-11-15 21:13:09 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:13:09 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:13:13 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:13:13 - __main__ - INFO - Attempt 19/20 - Collected: 0/50
+2025-11-15 21:13:13 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:13:13 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:13:17 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:13:17 - __main__ - INFO - Attempt 20/20 - Collected: 0/50
+2025-11-15 21:13:17 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:13:17 - __main__ - INFO - Scrolled to bottom 1/7
+2025-11-15 21:13:21 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:13:21 - __main__ - INFO - Scraping complete! Collected 0 unique coffee shops
+2025-11-15 21:13:53 - __main__ - INFO - Starting scrape for 50 coffee shops from: https://www.justdial.com/Mumbai/Japanese-Restaurants/nct-10192680
+2025-11-15 21:13:55 - __main__ - INFO - Chrome WebDriver initialized
+2025-11-15 21:14:08 - __main__ - INFO - Page loaded, starting to extract listings...
+2025-11-15 21:14:08 - __main__ - INFO - Attempt 1/20 - Collected: 0/50
+2025-11-15 21:14:08 - __main__ - INFO - Found 10 listings with selector: .resultbox
+2025-11-15 21:14:09 - __main__ - INFO - Collected: Search Chem Industries Ltd (1/50)
+2025-11-15 21:14:10 - __main__ - INFO - Collected: Infomedia India Ltd. (2/50)
+2025-11-15 21:14:10 - __main__ - INFO - Collected: Search Word Book Shop (3/50)
+2025-11-15 21:14:10 - __main__ - INFO - Collected: Search Architecture & Landscape (4/50)
+2025-11-15 21:14:11 - __main__ - INFO - Collected: Searchbox Digital Agency (5/50)
+2025-11-15 21:14:11 - __main__ - INFO - Collected: Search For Me (6/50)
+2025-11-15 21:14:12 - __main__ - INFO - Collected: Search Engine Optimization (Seo) (7/50)
+2025-11-15 21:14:12 - __main__ - INFO - Collected: Search (8/50)
+2025-11-15 21:14:13 - __main__ - INFO - Collected: Search Bag (9/50)
+2025-11-15 21:14:13 - __main__ - INFO - Collected: Search Synergy (10/50)
+2025-11-15 21:14:14 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:14:18 - __main__ - INFO - Scrolled to bottom 2/5
+2025-11-15 21:14:22 - __main__ - ERROR - Error scrolling: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=142.0.7444.135); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1716dd
+	0x7ff66f15d205
+	0x7ff66f182a8a
+	0x7ff66f1fa476
+	0x7ff66f21b3d2
+	0x7ff66f1bb0ed
+	0x7ff66f1bbf63
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f3eb7e4
+	0x7ff66f3eb99f
+	0x7ff66f3d1908
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:22 - __main__ - WARNING - Cannot load more results
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 2/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Failed saving debug HTML: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 3/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 4/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 5/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 6/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 7/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 8/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 9/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 10/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 11/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 12/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 13/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 14/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 15/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 16/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 17/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 18/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 19/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Attempt 20/20 - Collected: 10/50
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li.cntanr: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for .resultbox: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for li[class*="result"]: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - ERROR - Error finding elements for div.store-details: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - WARNING - No listings found, trying to scroll...
+2025-11-15 21:14:27 - __main__ - ERROR - Error scrolling: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff66f68a235
+	0x7ff66f3e2650
+	0x7ff66f1714e5
+	0x7ff66f1ba151
+	0x7ff66f1f2a12
+	0x7ff66f1ed27c
+	0x7ff66f1ec46a
+	0x7ff66f13acb5
+	0x7ff66f6b5d60
+	0x7ff66f6afe8a
+	0x7ff66f6d1005
+	0x7ff66f3fd73e
+	0x7ff66f404e3f
+	0x7ff66f13977b
+	0x7ff66f8045f8
+	0x7ffa0fb2e8d7
+	0x7ffa10c4c53c
+
+2025-11-15 21:14:27 - __main__ - INFO - Scraping complete! Collected 10 unique coffee shops
+2025-11-15 21:14:29 - __main__ - INFO - Saved 10 businesses to data\justdial_mumbai_20251115_211429.csv
+2025-11-15 21:14:29 - __main__ - INFO - Saved 10 businesses to data\justdial_mumbai_20251115_211429.json
+2025-11-15 21:15:58 - __main__ - INFO - Starting scrape for 60 coffee shops from: https://www.justdial.com/Mumbai/Japanese-Restaurants/nct-10279229
+2025-11-15 21:15:59 - __main__ - INFO - Chrome WebDriver initialized
+2025-11-15 21:16:03 - __main__ - INFO - Page loaded, starting to extract listings...
+2025-11-15 21:16:03 - __main__ - INFO - Attempt 1/20 - Collected: 0/60
+2025-11-15 21:16:04 - __main__ - INFO - Found 10 listings with selector: .resultbox
+2025-11-15 21:16:04 - __main__ - INFO - Collected: China Bistro (1/60)
+2025-11-15 21:16:05 - __main__ - INFO - Collected: Gin Gin Restaurant (2/60)
+2025-11-15 21:16:05 - __main__ - INFO - Collected: House Of Asia (3/60)
+2025-11-15 21:16:06 - __main__ - INFO - Collected: Global Fusion Restaurant (4/60)
+2025-11-15 21:16:06 - __main__ - INFO - Collected: Yuhi Lounge (5/60)
+2025-11-15 21:16:07 - __main__ - INFO - Collected: The Fatty Bao (6/60)
+2025-11-15 21:16:07 - __main__ - INFO - Collected: Izumi (7/60)
+2025-11-15 21:16:08 - __main__ - INFO - Collected: Kuai Kitchen (8/60)
+2025-11-15 21:16:08 - __main__ - INFO - Collected: Origami Restaurant (9/60)
+2025-11-15 21:16:09 - __main__ - INFO - Collected: The Nines (10/60)
+2025-11-15 21:16:09 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:16:13 - __main__ - INFO - Scrolled to bottom 2/5
+2025-11-15 21:16:17 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:16:17 - __main__ - INFO - Attempt 2/20 - Collected: 10/60
+2025-11-15 21:16:17 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:16:18 - __main__ - INFO - Collected: China Bistro (10/60)
+2025-11-15 21:16:18 - __main__ - INFO - Collected: Gin Gin Restaurant (10/60)
+2025-11-15 21:16:18 - __main__ - INFO - Collected: House Of Asia (10/60)
+2025-11-15 21:16:19 - __main__ - INFO - Collected: Global Fusion Restaurant (10/60)
+2025-11-15 21:16:19 - __main__ - INFO - Collected: Yuhi Lounge (10/60)
+2025-11-15 21:16:20 - __main__ - INFO - Collected: The Fatty Bao (10/60)
+2025-11-15 21:16:20 - __main__ - INFO - Collected: Izumi (10/60)
+2025-11-15 21:16:21 - __main__ - INFO - Collected: Kuai Kitchen (10/60)
+2025-11-15 21:16:21 - __main__ - INFO - Collected: Origami Restaurant (10/60)
+2025-11-15 21:16:22 - __main__ - INFO - Collected: The Nines (10/60)
+2025-11-15 21:16:23 - __main__ - INFO - Collected: Jodhana Zaika (11/60)
+2025-11-15 21:16:23 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (12/60)
+2025-11-15 21:16:24 - __main__ - INFO - Collected: You Mee (13/60)
+2025-11-15 21:16:24 - __main__ - INFO - Collected: Eve Cafe & Bar (14/60)
+2025-11-15 21:16:24 - __main__ - INFO - Collected: Kuuraku (15/60)
+2025-11-15 21:16:25 - __main__ - INFO - Collected: Amadeo By Oberoi (16/60)
+2025-11-15 21:16:25 - __main__ - INFO - Collected: Jintan - Asian Kitchen (17/60)
+2025-11-15 21:16:25 - __main__ - INFO - Collected: Ping's Cafe Orient (18/60)
+2025-11-15 21:16:25 - __main__ - INFO - Collected: Shizusan (19/60)
+2025-11-15 21:16:26 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:16:26 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:16:30 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:16:30 - __main__ - INFO - Attempt 3/20 - Collected: 20/60
+2025-11-15 21:16:30 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:16:30 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:16:30 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:16:31 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:16:31 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:16:31 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:16:31 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:16:32 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:16:33 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:16:33 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:16:33 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:16:35 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:16:35 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:16:36 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:16:36 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:16:37 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:16:37 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:16:37 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:16:38 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:16:38 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:16:39 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:16:39 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:16:43 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:16:43 - __main__ - INFO - Attempt 4/20 - Collected: 20/60
+2025-11-15 21:16:43 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:16:44 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:16:44 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:16:45 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:16:45 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:16:46 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:16:46 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:16:47 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:16:47 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:16:48 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:16:48 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:16:49 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:16:50 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:16:50 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:16:51 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:16:51 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:16:52 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:16:52 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:16:53 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:16:53 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:16:54 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:16:54 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:16:58 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:16:58 - __main__ - INFO - Attempt 5/20 - Collected: 20/60
+2025-11-15 21:16:58 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:16:58 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:16:59 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:16:59 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:17:00 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:17:00 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:17:00 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:17:01 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:17:01 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:17:02 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:17:02 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:17:03 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:17:03 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:17:04 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:17:04 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:17:05 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:17:05 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:17:06 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:17:06 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:17:07 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:17:07 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:17:07 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:17:11 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:17:11 - __main__ - INFO - Attempt 6/20 - Collected: 20/60
+2025-11-15 21:17:11 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:17:12 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:17:12 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:17:12 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:17:13 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:17:13 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:17:14 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:17:14 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:17:15 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:17:15 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:17:16 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:17:17 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:17:17 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:17:18 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:17:18 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:17:19 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:17:19 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:17:19 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:17:20 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:17:20 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:17:21 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:17:21 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:17:25 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:17:25 - __main__ - INFO - Attempt 7/20 - Collected: 20/60
+2025-11-15 21:17:25 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:17:25 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:17:26 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:17:26 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:17:27 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:17:27 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:17:27 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:17:28 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:17:28 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:17:29 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:17:29 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:17:30 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:17:30 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:17:31 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:17:31 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:17:32 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:17:32 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:17:33 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:17:33 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:17:33 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:17:34 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:17:34 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:17:38 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:17:38 - __main__ - INFO - Attempt 8/20 - Collected: 20/60
+2025-11-15 21:17:38 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:17:39 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:17:39 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:17:39 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:17:40 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:17:40 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:17:41 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:17:41 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:17:41 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:17:42 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:17:42 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:17:43 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:17:44 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:17:44 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:17:45 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:17:45 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:17:46 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:17:46 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:17:46 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:17:47 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:17:47 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:17:48 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:17:52 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:17:52 - __main__ - INFO - Attempt 9/20 - Collected: 20/60
+2025-11-15 21:17:52 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:17:52 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:17:53 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:17:53 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:17:54 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:17:54 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:17:54 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:17:55 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:17:55 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:17:55 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:17:56 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:17:56 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:17:57 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:17:57 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:17:57 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:17:58 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:17:58 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:17:59 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:17:59 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:18:00 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:18:00 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:18:00 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:18:04 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:18:04 - __main__ - INFO - Attempt 10/20 - Collected: 20/60
+2025-11-15 21:18:04 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:18:05 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:18:05 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:18:06 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:18:06 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:18:06 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:18:07 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:18:07 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:18:08 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:18:08 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:18:09 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:18:09 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:18:10 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:18:10 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:18:11 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:18:11 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:18:12 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:18:12 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:18:13 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:18:13 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:18:13 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:18:14 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:18:18 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:18:18 - __main__ - INFO - Attempt 11/20 - Collected: 20/60
+2025-11-15 21:18:18 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:18:18 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:18:19 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:18:19 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:18:20 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:18:20 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:18:20 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:18:21 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:18:22 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:18:22 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:18:22 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:18:23 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:18:24 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:18:24 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:18:25 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:18:25 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:18:26 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:18:26 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:18:27 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:18:27 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:18:28 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:18:28 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:18:32 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:18:32 - __main__ - INFO - Attempt 12/20 - Collected: 20/60
+2025-11-15 21:18:32 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:18:33 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:18:33 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:18:34 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:18:34 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:18:34 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:18:35 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:18:35 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:18:36 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:18:36 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:18:37 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:18:37 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:18:38 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:18:38 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:18:39 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:18:39 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:18:40 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:18:40 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:18:40 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:18:41 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:18:41 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:18:41 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:18:45 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:18:45 - __main__ - INFO - Attempt 13/20 - Collected: 20/60
+2025-11-15 21:18:45 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:18:46 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:18:46 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:18:47 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:18:49 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:18:49 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:18:50 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:18:50 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:18:51 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:18:51 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:18:51 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:18:52 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:18:53 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:18:53 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:18:54 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:18:54 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:18:55 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:18:55 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:18:55 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:18:56 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:18:56 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:18:56 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:19:00 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:19:00 - __main__ - INFO - Attempt 14/20 - Collected: 20/60
+2025-11-15 21:19:00 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:19:01 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:19:01 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:19:01 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:19:02 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:19:02 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:19:02 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:19:02 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:19:02 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:19:03 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:19:03 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:19:03 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:19:04 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:19:04 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:19:04 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:19:04 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:19:05 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:19:05 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:19:05 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:19:05 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:19:05 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:19:05 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:19:10 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:19:10 - __main__ - INFO - Attempt 15/20 - Collected: 20/60
+2025-11-15 21:19:10 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:19:10 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:19:10 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:19:10 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:19:10 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:19:11 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:19:11 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:19:11 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:19:11 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:19:12 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:19:12 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:19:12 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:19:13 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:19:13 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:19:13 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:19:13 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:19:13 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:19:14 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:19:14 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:19:14 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:19:14 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:19:14 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:19:18 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:19:18 - __main__ - INFO - Attempt 16/20 - Collected: 20/60
+2025-11-15 21:19:18 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:19:19 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:19:19 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:19:19 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:19:20 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:19:20 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:19:20 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:19:20 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:19:20 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:19:21 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:19:21 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:19:21 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:19:22 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:19:22 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:19:22 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:19:22 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:19:23 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:19:23 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:19:23 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:19:23 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:19:24 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:19:24 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:19:28 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:19:28 - __main__ - INFO - Attempt 17/20 - Collected: 20/60
+2025-11-15 21:19:28 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:19:28 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:19:28 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:19:28 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:19:29 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:19:29 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:19:29 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:19:29 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:19:30 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:19:30 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:19:30 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:19:31 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:19:31 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:19:31 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:19:31 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:19:32 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:19:32 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:19:32 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:19:33 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:19:33 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:19:33 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:19:33 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:19:37 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:19:37 - __main__ - INFO - Attempt 18/20 - Collected: 20/60
+2025-11-15 21:19:37 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:19:38 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:19:38 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:19:39 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:19:39 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:19:39 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:19:40 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:19:40 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:19:41 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:19:41 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:19:42 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:19:43 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:19:43 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:19:44 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:19:44 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:19:44 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:19:45 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:19:45 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:19:46 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:19:46 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:19:47 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:19:47 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:19:51 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:19:51 - __main__ - INFO - Attempt 19/20 - Collected: 20/60
+2025-11-15 21:19:51 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:19:51 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:19:52 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:19:52 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:19:53 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:19:53 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:19:54 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:19:54 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:19:55 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:19:55 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:19:56 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:19:57 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:19:57 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:19:58 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:19:58 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:19:59 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:19:59 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:20:00 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:20:00 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:20:00 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:20:01 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:20:01 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:20:05 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:20:05 - __main__ - INFO - Attempt 20/20 - Collected: 20/60
+2025-11-15 21:20:05 - __main__ - INFO - Found 21 listings with selector: .resultbox
+2025-11-15 21:20:05 - __main__ - INFO - Collected: China Bistro (20/60)
+2025-11-15 21:20:06 - __main__ - INFO - Collected: Gin Gin Restaurant (20/60)
+2025-11-15 21:20:06 - __main__ - INFO - Collected: House Of Asia (20/60)
+2025-11-15 21:20:07 - __main__ - INFO - Collected: Global Fusion Restaurant (20/60)
+2025-11-15 21:20:07 - __main__ - INFO - Collected: Yuhi Lounge (20/60)
+2025-11-15 21:20:07 - __main__ - INFO - Collected: The Fatty Bao (20/60)
+2025-11-15 21:20:08 - __main__ - INFO - Collected: Izumi (20/60)
+2025-11-15 21:20:08 - __main__ - INFO - Collected: Kuai Kitchen (20/60)
+2025-11-15 21:20:08 - __main__ - INFO - Collected: Origami Restaurant (20/60)
+2025-11-15 21:20:08 - __main__ - INFO - Collected: The Nines (20/60)
+2025-11-15 21:20:09 - __main__ - INFO - Collected: Jodhana Zaika (20/60)
+2025-11-15 21:20:09 - __main__ - INFO - Collected: Shizusan (Phoenix Marketcity Mall) (20/60)
+2025-11-15 21:20:09 - __main__ - INFO - Collected: You Mee (20/60)
+2025-11-15 21:20:09 - __main__ - INFO - Collected: Eve Cafe & Bar (20/60)
+2025-11-15 21:20:10 - __main__ - INFO - Collected: Kuuraku (20/60)
+2025-11-15 21:20:10 - __main__ - INFO - Collected: Amadeo By Oberoi (20/60)
+2025-11-15 21:20:10 - __main__ - INFO - Collected: Jintan - Asian Kitchen (20/60)
+2025-11-15 21:20:10 - __main__ - INFO - Collected: Ping's Cafe Orient (20/60)
+2025-11-15 21:20:11 - __main__ - INFO - Collected: Shizusan (20/60)
+2025-11-15 21:20:11 - __main__ - INFO - Collected: Asian Street Kitchen (20/60)
+2025-11-15 21:20:11 - __main__ - INFO - Scrolled to bottom 1/5
+2025-11-15 21:20:15 - __main__ - INFO - No further increase in page height after scrolling.
+2025-11-15 21:20:15 - __main__ - INFO - Scraping complete! Collected 20 unique coffee shops
+2025-11-15 21:20:17 - __main__ - INFO - Saved 20 businesses to data\justdial_mumbai_20251115_212017.csv
+2025-11-15 21:20:17 - __main__ - INFO - Saved 20 businesses to data\justdial_mumbai_20251115_212017.json

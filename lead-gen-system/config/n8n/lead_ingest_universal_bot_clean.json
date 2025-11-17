@@ -1,0 +1,148 @@
+{
+  "name": "RFRNCS Universal Lead Generation Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-leads",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rfrncs-lead-gen"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract URL from webhook body\nconst body = $input.item.json.body || $input.item.json;\nconst url = body.url || body.text || body.link || '';\n\nif (!url) {\n  throw new Error('No URL provided in request. Send JSON: {\"url\": \"https://...\"}');\n}\n\n// Validate URL format\nif (!url.match(/^https?:\\/\\/.+/i)) {\n  throw new Error('Invalid URL format. Must start with http:// or https://');\n}\n\nreturn {\n  url: url,\n  source: body.source || 'webhook',\n  requested_at: new Date().toISOString()\n};"
+      },
+      "name": "Extract URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Detect platform from URL\nconst url = $input.item.json.url;\nlet platform = 'unknown';\n\ntry {\n  // Normalize hostname - remove www. and convert to lowercase\n  const hostname = new URL(url).hostname.toLowerCase().replace(/^www\\./, '');\n  \n  // Check for platform matches\n  if (hostname.includes('instagram.com')) platform = 'instagram';\n  else if (hostname.includes('twitter.com') || hostname.includes('x.com')) platform = 'twitter';\n  else if (hostname.includes('linkedin.com')) platform = 'linkedin';\n  else if (hostname.includes('facebook.com')) platform = 'facebook';\n  else if (hostname.includes('tiktok.com')) platform = 'tiktok';\n  else if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) platform = 'youtube';\n  else if (hostname.includes('reddit.com')) platform = 'reddit';\n  else if (hostname.includes('justdial.com')) platform = 'justdial';\n  else if (hostname.includes('ycombinator.com')) platform = 'ycombinator';\n  else if (hostname.includes('zomato.com')) platform = 'zomato';\n  else if (hostname.includes('producthunt.com')) platform = 'producthunt';\n  else if (hostname.includes('crunchbase.com')) platform = 'crunchbase';\n  else if (hostname.includes('medium.com')) platform = 'medium';\n  else if (hostname.includes('substack.com')) platform = 'substack';\n  \n  console.log('Detected platform:', platform, 'from hostname:', hostname);\n} catch (e) {\n  console.error('Platform detection error:', e);\n  platform = 'unknown';\n}\n\nreturn {\n  url: url,\n  platform: platform,\n  source: $input.item.json.source || 'webhook'\n};"
+      },
+      "name": "Detect Platform",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 5
+            }
+          }
+        }
+      },
+      "name": "Fetch Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Universal entity extractor - works across ALL platforms\nconst html = $input.item.json.data || $input.item.json.body || '';\nconst platform = $input.item.json.platform;\nconst sourceUrl = $input.item.json.url;\n\n// Helper functions\nfunction extractBetween(text, start, end) {\n  const startIdx = text.indexOf(start);\n  if (startIdx === -1) return null;\n  const endIdx = text.indexOf(end, startIdx + start.length);\n  if (endIdx === -1) return null;\n  return text.substring(startIdx + start.length, endIdx);\n}\n\nfunction extractAll(text, regex) {\n  const matches = [];\n  let match;\n  const re = new RegExp(regex.source, regex.flags);\n  while ((match = re.exec(text)) !== null) {\n    matches.push(match[1] || match[0]);\n  }\n  return [...new Set(matches)];\n}\n\nfunction extractMeta(html, name) {\n  const patterns = [\n    new RegExp(`<meta property=\"${name}\" content=\"([^\"]+)\"`, 'i'),\n    new RegExp(`<meta name=\"${name}\" content=\"([^\"]+)\"`, 'i'),\n    new RegExp(`<meta property='${name}' content='([^']+)'`, 'i')\n  ];\n  for (const pattern of patterns) {\n    const match = html.match(pattern);\n    if (match) return match[1];\n  }\n  return null;\n}\n\nfunction extractJsonLd(html) {\n  const scripts = extractAll(html, /<script type=\"application\\/ld\\+json\">([\\s\\S]*?)<\\/script>/g);\n  const parsed = [];\n  for (const script of scripts) {\n    try {\n      parsed.push(JSON.parse(script));\n    } catch (e) {}\n  }\n  return parsed;\n}\n\n// Common metadata extraction\nconst ogTitle = extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title');\nconst ogDesc = extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || extractMeta(html, 'description');\nconst ogImage = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image');\nconst title = (html.match(/<title>([^<]+)<\\/title>/i) || [])[1] || ogTitle || '';\n\n// Extract all external links (potential websites)\nconst allLinks = extractAll(html, /href=\"(https?:\\/\\/[^\"]+)\"/g);\nconst excludeDomains = ['instagram.com', 'facebook.com', 'twitter.com', 'x.com', 'linkedin.com', 'tiktok.com', 'youtube.com', 'reddit.com', 't.co', 'bit.ly', 'ow.ly'];\nconst externalLinks = allLinks.filter(link => {\n  try {\n    const linkHost = new URL(link).hostname;\n    return !excludeDomains.some(domain => linkHost.includes(domain));\n  } catch (e) {\n    return false;\n  }\n}).slice(0, 5);\n\nlet entities = [];\n\n// ===========================================\n// INSTAGRAM EXTRACTION\n// ===========================================\nif (platform === 'instagram') {\n  // Try to extract from window._sharedData\n  const sharedDataMatch = html.match(/window\\._sharedData\\s*=\\s*({.+?})<\\/script>/s);\n  \n  if (sharedDataMatch) {\n    try {\n      const data = JSON.parse(sharedDataMatch[1]);\n      \n      // Profile page\n      const user = data?.entry_data?.ProfilePage?.[0]?.graphql?.user;\n      if (user) {\n        entities.push({\n          brand_name: user.full_name || user.username,\n          handle: user.username,\n          bio: user.biography || '',\n          website: user.external_url || '',\n          followers: user.edge_followed_by?.count || 0,\n          profile_pic: user.profile_pic_url_hd || user.profile_pic_url || '',\n          verified: user.is_verified || false,\n          type: 'account'\n        });\n      }\n      \n      // Post page - extract mentions and tagged users\n      const media = data?.entry_data?.PostPage?.[0]?.graphql?.shortcode_media;\n      if (media) {\n        const caption = media.edge_media_to_caption?.edges?.[0]?.node?.text || '';\n        const mentions = extractAll(caption, /@([a-zA-Z0-9._]+)/g);\n        const tagged = media.edge_media_to_tagged_user?.edges || [];\n        \n        const allHandles = [...new Set([...mentions, ...tagged.map(t => t.node.user.username)])];\n        \n        allHandles.forEach(handle => {\n          entities.push({\n            brand_name: handle,\n            handle: handle,\n            bio: caption.substring(0, 200),\n            found_in: 'post_mention',\n            type: 'mention'\n          });\n        });\n      }\n    } catch (e) {}\n  }\n  \n  // Fallback: regex extraction\n  if (entities.length === 0) {\n    const mentions = extractAll(html, /@([a-zA-Z0-9._]+)/g).slice(0, 20);\n    mentions.forEach(handle => {\n      entities.push({\n        brand_name: handle,\n        handle: handle,\n        found_in: 'html_mention',\n        type: 'mention'\n      });\n    });\n  }\n}\n\n// ===========================================\n// TWITTER/X EXTRACTION\n// ===========================================\nelse if (platform === 'twitter') {\n  const tweetText = ogTitle || title;\n  const author = extractMeta(html, 'twitter:creator') || (html.match(/\"screen_name\":\"([^\"]+)\"/) || [])[1];\n  \n  // Extract mentioned users\n  const mentions = extractAll(html, /@([a-zA-Z0-9_]+)/g);\n  \n  mentions.forEach(handle => {\n    entities.push({\n      brand_name: handle,\n      handle: handle,\n      bio: tweetText ? tweetText.substring(0, 200) : '',\n      website: externalLinks[0] || '',\n      found_in: 'tweet_mention',\n      type: 'mention'\n    });\n  });\n  \n  // Also add the tweet author\n  if (author) {\n    entities.unshift({\n      brand_name: author,\n      handle: author,\n      bio: tweetText || '',\n      website: externalLinks[0] || '',\n      type: 'author'\n    });\n  }\n}\n\n// ===========================================\n// LINKEDIN EXTRACTION\n// ===========================================\nelse if (platform === 'linkedin') {\n  const author = extractMeta(html, 'author');\n  const description = ogDesc || '';\n  \n  // Extract company names from post/profile\n  const companyMatch = html.match(/\"companyName\":\"([^\"]+)\"/g);\n  const companies = companyMatch ? companyMatch.map(m => m.match(/\"companyName\":\"([^\"]+)\"/)[1]) : [];\n  \n  // Extract person names\n  const nameMatch = html.match(/\"name\":\"([^\"]+)\"/g);\n  const names = nameMatch ? nameMatch.map(m => m.match(/\"name\":\"([^\"]+)\"/)[1]) : [];\n  \n  [...new Set([...companies, ...names])].slice(0, 15).forEach(name => {\n    if (name && name.length > 2 && name.length < 100) {\n      entities.push({\n        brand_name: name,\n        bio: description.substring(0, 200),\n        website: externalLinks[0] || '',\n        type: 'linkedin_entity'\n      });\n    }\n  });\n}\n\n// ===========================================\n// FACEBOOK EXTRACTION\n// ===========================================\nelse if (platform === 'facebook') {\n  const pageName = ogTitle || title;\n  const description = ogDesc || '';\n  \n  entities.push({\n    brand_name: pageName,\n    bio: description,\n    website: externalLinks[0] || '',\n    type: 'facebook_page'\n  });\n}\n\n// ===========================================\n// TIKTOK EXTRACTION\n// ===========================================\nelse if (platform === 'tiktok') {\n  const username = (html.match(/\"uniqueId\":\"([^\"]+)\"/) || [])[1];\n  const nickname = (html.match(/\"nickname\":\"([^\"]+)\"/) || [])[1];\n  const description = ogDesc || '';\n  \n  if (username) {\n    entities.push({\n      brand_name: nickname || username,\n      handle: username,\n      bio: description,\n      type: 'tiktok_account'\n    });\n  }\n}\n\n// ===========================================\n// YOUTUBE EXTRACTION\n// ===========================================\nelse if (platform === 'youtube') {\n  const channelName = extractMeta(html, 'og:title') || title;\n  const description = extractMeta(html, 'og:description') || '';\n  \n  entities.push({\n    brand_name: channelName,\n    bio: description.substring(0, 300),\n    website: externalLinks[0] || '',\n    type: 'youtube_channel'\n  });\n}\n\n// ===========================================\n// REDDIT EXTRACTION\n// ===========================================\nelse if (platform === 'reddit') {\n  const author = (html.match(/\"author\":\"([^\"]+)\"/) || [])[1];\n  const threadTitle = ogTitle || title;\n  const subreddit = (html.match(/r\\/([a-zA-Z0-9_]+)/) || [])[1];\n  \n  if (author) {\n    entities.push({\n      brand_name: author,\n      handle: author,\n      bio: threadTitle,\n      website: externalLinks[0] || '',\n      subreddit: subreddit,\n      type: 'reddit_user'\n    });\n  }\n}\n\n// ===========================================\n// YCOMBINATOR EXTRACTION\n// ===========================================\nelse if (platform === 'ycombinator') {\n  const scriptMatch = html.match(/<script id=\"__NEXT_DATA__\"[^>]*>([\\s\\S]*?)<\\/script>/);\n  \n  if (scriptMatch) {\n    try {\n      const data = JSON.parse(scriptMatch[1]);\n      \n      function findCompanies(obj, results = []) {\n        if (!obj || typeof obj !== 'object') return results;\n        \n        if (obj.name && typeof obj.name === 'string' && (obj.website || obj.slug)) {\n          results.push({\n            brand_name: obj.name,\n            bio: obj.one_liner || obj.description || '',\n            website: obj.website || '',\n            industry: (obj.industries || [])[0] || '',\n            batch: obj.batch || '',\n            type: 'yc_company'\n          });\n        }\n        \n        Object.values(obj).forEach(val => {\n          if (typeof val === 'object') findCompanies(val, results);\n        });\n        \n        return results;\n      }\n      \n      entities = findCompanies(data);\n    } catch (e) {}\n  }\n}\n\n// ===========================================\n// JUSTDIAL EXTRACTION\n// ===========================================\nelse if (platform === 'justdial') {\n  const jsonLdData = extractJsonLd(html);\n  \n  jsonLdData.forEach(data => {\n    if (data['@type'] && (data['@type'].includes('LocalBusiness') || data['@type'].includes('Restaurant'))) {\n      entities.push({\n        brand_name: data.name || '',\n        bio: data.description || '',\n        website: data.url || '',\n        phone: data.telephone || '',\n        email: data.email || '',\n        rating: data.aggregateRating?.ratingValue || null,\n        reviews: data.aggregateRating?.reviewCount || null,\n        type: 'local_business'\n      });\n    }\n  });\n}\n\n// ===========================================\n// ZOMATO EXTRACTION\n// ===========================================\nelse if (platform === 'zomato') {\n  const restaurantName = (html.match(/<h1[^>]*>([^<]+)<\\/h1>/) || [])[1] || ogTitle;\n  const cuisine = (html.match(/Cuisine[s]?[^>]*>([^<]+)</) || [])[1];\n  \n  entities.push({\n    brand_name: restaurantName,\n    bio: cuisine || 'Restaurant',\n    website: externalLinks[0] || '',\n    type: 'restaurant'\n  });\n}\n\n// ===========================================\n// PRODUCT HUNT EXTRACTION\n// ===========================================\nelse if (platform === 'producthunt') {\n  const productName = ogTitle || title;\n  const description = ogDesc || '';\n  \n  entities.push({\n    brand_name: productName,\n    bio: description,\n    website: externalLinks[0] || '',\n    type: 'product'\n  });\n}\n\n// ===========================================\n// CRUNCHBASE EXTRACTION\n// ===========================================\nelse if (platform === 'crunchbase') {\n  const companyName = ogTitle || title;\n  const description = ogDesc || '';\n  \n  entities.push({\n    brand_name: companyName,\n    bio: description,\n    website: externalLinks[0] || '',\n    type: 'startup'\n  });\n}\n\n// ===========================================\n// GENERIC/UNKNOWN PLATFORM\n// ===========================================\nelse {\n  // Extract any brand mentions, emails, or structured data\n  const jsonLdData = extractJsonLd(html);\n  \n  if (jsonLdData.length > 0) {\n    jsonLdData.forEach(data => {\n      if (data.name) {\n        entities.push({\n          brand_name: data.name,\n          bio: data.description || ogDesc || '',\n          website: data.url || externalLinks[0] || '',\n          type: 'structured_data'\n        });\n      }\n    });\n  }\n  \n  // Fallback to basic extraction\n  if (entities.length === 0) {\n    entities.push({\n      brand_name: (title || 'Unknown').substring(0, 100),\n      bio: (ogDesc || '').substring(0, 300),\n      website: externalLinks[0] || '',\n      type: 'generic'\n    });\n  }\n}\n\n// ===========================================\n// POST-PROCESSING: Attach metadata to all entities\n// ===========================================\nentities = entities.map(entity => ({\n  ...entity,\n  source_platform: platform,\n  source_url: sourceUrl,\n  extracted_at: new Date().toISOString()\n}));\n\n// Remove duplicates based on brand_name + handle\nconst seen = new Set();\nentities = entities.filter(entity => {\n  const key = (entity.brand_name || '').toLowerCase() + '|' + (entity.handle || '').toLowerCase();\n  if (seen.has(key)) return false;\n  seen.add(key);\n  return true;\n});\n\n// If no entities found, create a placeholder\nif (entities.length === 0) {\n  entities.push({\n    brand_name: title || 'Unknown',\n    bio: ogDesc || 'No description available',\n    source_platform: platform,\n    source_url: sourceUrl,\n    type: 'fallback',\n    extracted_at: new Date().toISOString()\n  });\n}\n\nreturn entities;"
+      },
+      "name": "Extract Entities",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize to UNIVERSAL common schema\nconst raw = $input.item.json;\n\n// Determine service/product category\nlet serviceProduct = 'Unspecified';\nif (raw.industry) serviceProduct = raw.industry;\nelse if (raw.type) {\n  const typeMap = {\n    'account': 'Social Media Account',\n    'mention': 'Social Media Mention',\n    'author': 'Content Creator',\n    'linkedin_entity': 'Professional/Company',\n    'facebook_page': 'Facebook Page',\n    'tiktok_account': 'TikTok Creator',\n    'youtube_channel': 'YouTube Channel',\n    'reddit_user': 'Reddit User',\n    'yc_company': 'Startup',\n    'local_business': 'Local Business',\n    'restaurant': 'Restaurant',\n    'product': 'Product',\n    'startup': 'Startup'\n  };\n  serviceProduct = typeMap[raw.type] || 'General Business';\n}\n\n// Extract email if present in bio/description\nconst emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)/;\nconst emailMatch = (raw.bio || '').match(emailRegex) || (raw.email || '').match(emailRegex);\nconst extractedEmail = raw.email || (emailMatch ? emailMatch[1] : '');\n\nreturn {\n  // CORE FIELDS (Universal Schema)\n  brand: raw.brand_name || 'Unknown',\n  service_product: serviceProduct,\n  instagram_id: raw.handle || raw.instagram_id || '',\n  email: extractedEmail,\n  phone: raw.phone || '',\n  website: raw.website || '',\n  description: (raw.bio || '').substring(0, 300),\n  \n  // METADATA FIELDS\n  source_platform: raw.source_platform,\n  source_url: raw.source_url,\n  entity_type: raw.type || 'unknown',\n  \n  // ENGAGEMENT METRICS (if available)\n  followers: raw.followers || null,\n  rating: raw.rating || null,\n  reviews: raw.reviews || null,\n  verified: raw.verified || false,\n  \n  // ADDITIONAL CONTEXT\n  profile_pic: raw.profile_pic || '',\n  found_via: raw.found_in || raw.found_via || 'direct',\n  subreddit: raw.subreddit || '',\n  batch: raw.batch || '',\n  \n  // TIMESTAMPS\n  extracted_at: raw.extracted_at\n};"
+      },
+      "name": "Normalize to Universal Schema",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build AI analysis prompt\nconst brand = $input.item.json;\n\nconst prompt = `You are a marketing analyst at RFRNCS (https://www.rfrncs.in/), a branding agency.\n\nAnalyze this brand/business and determine if they need branding support.\n\nReturn ONLY valid JSON (no markdown formatting) with these exact keys:\n{\n  \"verdict\": \"High potential lead\" OR \"Low priority lead\",\n  \"reasoning\": [\"reason 1\", \"reason 2\", \"reason 3\"],\n  \"confidence\": 0.85,\n  \"marketing_gaps\": [\"gap 1\", \"gap 2\"],\n  \"priority_score\": 7\n}\n\nBrand Data:\n- Name: ${brand.brand}\n- Service/Product: ${brand.service_product}\n- Website: ${brand.website || 'NONE'}\n- Instagram: ${brand.instagram_id || 'NONE'}\n- Email: ${brand.email || 'NONE'}\n- Phone: ${brand.phone || 'NONE'}\n- Description: ${brand.description}\n- Platform Found: ${brand.source_platform}\n- Followers: ${brand.followers || 'Unknown'}\n- Verified: ${brand.verified ? 'Yes' : 'No'}\n\nEvaluation Criteria:\n1. Website presence (missing = HIGH PRIORITY)\n2. Contact information completeness\n3. Social media presence and verification\n4. Brand description quality\n5. Overall digital footprint\n\nPriority Score (0-10):\n- 8-10: Critical need (no website + weak presence)\n- 5-7: Moderate need (missing key elements)\n- 0-4: Low priority (strong brand presence)\n\nReturn ONLY the JSON object.`;\n\nreturn {\n  ...brand,\n  ai_prompt: prompt\n};"
+      },
+      "name": "Build AI Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$env.GEMINI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\"contents\":[{\"parts\":[{\"text\":{{$json.ai_prompt}}}]}]}",
+        "options": {}
+      },
+      "name": "Gemini Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Gemini response and merge with brand data\nconst response = $input.item.json;\nconst brand = $input.item.json;\n\nlet analysis = {\n  verdict: \"Low priority lead\",\n  reasoning: [\"Unable to analyze\"],\n  confidence: 0.2,\n  marketing_gaps: [],\n  priority_score: 3\n};\n\ntry {\n  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  const cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  analysis = JSON.parse(cleanText);\n} catch (e) {\n  console.error('Gemini parse error:', e);\n}\n\n// Return final unified output\nreturn {\n  // CORE SCHEMA (for CSV export)\n  brand: brand.brand,\n  service_product: brand.service_product,\n  instagram_id: brand.instagram_id,\n  email: brand.email,\n  phone: brand.phone,\n  website: brand.website,\n  description: brand.description,\n  \n  // SOURCE INFO\n  source_platform: brand.source_platform,\n  source_url: brand.source_url,\n  \n  // AI ANALYSIS\n  verdict: analysis.verdict,\n  reasoning: Array.isArray(analysis.reasoning) ? analysis.reasoning.join('; ') : String(analysis.reasoning),\n  confidence: analysis.confidence,\n  marketing_gaps: Array.isArray(analysis.marketing_gaps) ? analysis.marketing_gaps.join(', ') : String(analysis.marketing_gaps),\n  priority_score: analysis.priority_score || 5,\n  \n  // METRICS\n  followers: brand.followers,\n  rating: brand.rating,\n  reviews: brand.reviews,\n  verified: brand.verified,\n  \n  // TIMESTAMPS\n  extracted_at: brand.extracted_at,\n  analyzed_at: new Date().toISOString()\n};"
+      },
+      "name": "Parse & Finalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "sort",
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "priority_score",
+              "order": "descending"
+            }
+          ]
+        }
+      },
+      "name": "Sort by Priority",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "options": {
+          "fileName": "=rfrncs_leads_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv"
+        }
+      },
+      "name": "Convert to CSV",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2250, 200]
+    },
+    {
+      "parameters": {
+        "fromEmail": "vihaankulkarni29@gmail.com,
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Leads: {{$('Extract Entities').all().length}} brands found ({{$now.format('MMM DD, HH:mm')}})",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h2 style=\"color: #2563eb;\">🎯 Lead Generation Complete</h2>\n  \n  <div style=\"background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0;\">📊 Summary</h3>\n    <p><strong>Source:</strong> {{$('Detect Platform').item.json.platform}}</p>\n    <p><strong>URL:</strong> {{$('Detect Platform').item.json.url}}</p>\n    <p><strong>Brands Found:</strong> {{$('Extract Entities').all().length}}</p>\n    <p><strong>High Priority Leads:</strong> {{$('Parse & Finalize').all().filter(item => item.json.priority_score >= 7).length}}</p>\n  </div>\n  \n  <p>📎 <strong>Attached:</strong> CSV file with complete analysis</p>\n  <p style=\"color: #6b7280; font-size: 12px;\">Processed at {{$now.format('YYYY-MM-DD HH:mm:ss')}}</p>\n</div>"

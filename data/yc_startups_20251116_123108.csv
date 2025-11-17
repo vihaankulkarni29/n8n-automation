@@ -1,0 +1,4 @@
+name,batch,industry,location,website_present,website,detail_url,description,description_length,logo,video,team_size,founders,github,score
+Leaders In Tech,Summer 2015,Unspecified,"Leaders In Tech San Francisco, CA",False,,https://www.ycombinator.com/companies/leaders-in-tech,"Helping founders improve themselves, their companies, and the world.",68,,,,,,11
+Quantierra,Winter 2015,"Real Estate and Construction, Housing and Real Estate","Quantierra New York, NY",False,,https://www.ycombinator.com/companies/quantierra,Sourcing investment real estate,31,,,,,,11
+MetricWire,Summer 2014,"Healthcare, Healthcare IT",MetricWire,False,,https://www.ycombinator.com/companies/metricwire,Mobile surveys for researchers,30,,,,,,11

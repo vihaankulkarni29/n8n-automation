@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Casetext",
+    "batch": "Summer 2013",
+    "industry": "B2B, Legal",
+    "location": "Casetext San Francisco, CA",
+    "website": "https://startupschool.org?utm_source=yc&utm_campaign=ycdc_header",
+    "description": "We make the world's laws free and understandable.",
+    "logo": "",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/casetext",
+    "github": "https://github.com/casetext",
+    "score": 7,
+    "website_present": true,
+    "description_length": 49
+  },
+  {
+    "name": "DoorDash",
+    "batch": "Summer 2013",
+    "industry": "Consumer, Food and Beverage",
+    "location": "DoorDash",
+    "website": "https://startupschool.org?utm_source=yc&utm_campaign=ycdc_header",
+    "description": "Restaurant delivery.",
+    "logo": "https://bookface-images.s3.amazonaws.com/small_logos/d13287c52acc96909f32342e85c26a33cfdac310.png",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/doordash",
+    "score": 6,
+    "website_present": true,
+    "description_length": 20
+  },
+  {
+    "name": "Coinbase",
+    "batch": "Summer 2012",
+    "industry": "Fintech, Banking and Exchange",
+    "location": "Coinbase San Francisco, CA",
+    "website": "https://startupschool.org?utm_source=yc&utm_campaign=ycdc_header",
+    "description": "Buy, sell, and manage cryptocurrencies.",
+    "logo": "https://bookface-images.s3.amazonaws.com/small_logos/1169cb0b69fa7b338b5d51c2d3805f8f988bdfa5.png",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/coinbase",
+    "score": 6,
+    "website_present": true,
+    "description_length": 39
+  }
+]

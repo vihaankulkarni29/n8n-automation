@@ -1,0 +1,166 @@
+{
+  "name": "RFRNCS Universal Lead Generation Bot (Fixed)",
+  "id": "d7e2b8a0-8c2e-4e1a-9f3b-2a1c9e7b1234",
+  "active": false,
+  "version": 1,
+  "createdAt": "2025-11-16T10:00:00.000Z",
+  "updatedAt": "2025-11-16T10:00:00.000Z",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-leads",
+        "responseMode": "responseNode",
+        {
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "rfrncs-leads",
+            "responseMode": "responseNode",
+            "options": {}
+          },
+          "name": "Webhook Trigger",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 1,
+          "position": [250, 300],
+          "webhookId": "rfrncs-lead-gen"
+        },
+        {
+          "parameters": {
+            "jsCode": "const body = $input.item.json.body || $input.item.json;\nconst url = body.url || body.text || body.link || '';\nif (!url) { throw new Error('No URL provided in request. Send JSON: {\\\"url\\\": \\\"https://...\\\"}'); }\nif (!/^https?:\\/\\//i.test(url)) { throw new Error('Invalid URL format. Must start with http:// or https://'); }\nreturn { url, source: body.source || 'webhook', requested_at: new Date().toISOString() };"
+          },
+          "name": "Extract URL",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [450, 300]
+        },
+        {
+          "parameters": {
+            "jsCode": "const url = $input.item.json.url; let platform = 'unknown'; try { const hostname = new URL(url).hostname.toLowerCase().replace(/^www\\./, ''); if (hostname.includes('instagram.com')) platform = 'instagram'; else if (hostname.includes('twitter.com') || hostname.includes('x.com')) platform = 'twitter'; else if (hostname.includes('linkedin.com')) platform = 'linkedin'; else if (hostname.includes('facebook.com')) platform = 'facebook'; else if (hostname.includes('tiktok.com')) platform = 'tiktok'; else if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) platform = 'youtube'; else if (hostname.includes('reddit.com')) platform = 'reddit'; else if (hostname.includes('justdial.com')) platform = 'justdial'; else if (hostname.includes('ycombinator.com')) platform = 'ycombinator'; else if (hostname.includes('zomato.com')) platform = 'zomato'; else if (hostname.includes('producthunt.com')) platform = 'producthunt'; else if (hostname.includes('crunchbase.com')) platform = 'crunchbase'; else if (hostname.includes('medium.com')) platform = 'medium'; else if (hostname.includes('substack.com')) platform = 'substack'; } catch (e) { platform = 'unknown'; } return { url, platform };"
+          },
+          "name": "Detect Platform",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [650, 300]
+        },
+        {
+          "parameters": {
+            "url": "={{$json.url}}",
+            "options": {
+              "timeout": 30000,
+              "redirect": {
+                "redirect": {
+                  "followRedirects": true,
+                  "maxRedirects": 5
+                }
+              }
+            }
+          },
+          "name": "Fetch Page",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4,
+          "position": [850, 300]
+        },
+        {
+          "parameters": {
+            "jsCode": "const html = $input.item.json.data || $input.item.json.body || ''; const platform = $input.item.json.platform; const sourceUrl = $input.item.json.url; function extractAll(text, regex) { const matches = []; let m; const re = new RegExp(regex.source, regex.flags); while ((m = re.exec(text)) !== null) { matches.push(m[1] || m[0]); } return [...new Set(matches)]; } function extractMeta(h, name) { const patterns = [new RegExp(`<meta property=\\\"${name}\\\" content=\\\"([^\\\"]+)\\\"`, 'i'), new RegExp(`<meta name=\\\"${name}\\\" content=\\\"([^\\\"]+)\\\"`, 'i'), new RegExp(`<meta property='${name}' content='([^']+)'`, 'i')]; for (const p of patterns) { const match = h.match(p); if (match) return match[1]; } return null; } function extractJsonLd(h) { const scripts = extractAll(h, /<script type=\\\"application\/ld\+json\\\">([\\\\s\\\\S]*?)<\\\/script>/g); const parsed = []; for (const s of scripts) { try { parsed.push(JSON.parse(s)); } catch (e) {} } return parsed; } const ogTitle = extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title'); const ogDesc = extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || extractMeta(html, 'description'); const title = (html.match(/<title>([^<]+)<\\\/title>/i) || [])[1] || ogTitle || ''; let entities = []; entities.push({ brand_name: title || 'Unknown', bio: ogDesc || '', website: sourceUrl, source_platform: platform, source_url: sourceUrl, extracted_at: new Date().toISOString(), type: 'generic' }); return entities;"
+          },
+          "name": "Extract Entities",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [1050, 300]
+        },
+        {
+          "parameters": {
+            "jsCode": "const raw = $input.item.json; let serviceProduct = 'Unspecified'; if (raw.industry) serviceProduct = raw.industry; else if (raw.type) { const map = { 'account':'Social Media Account','mention':'Social Media Mention','author':'Content Creator','linkedin_entity':'Professional/Company','facebook_page':'Facebook Page','tiktok_account':'TikTok Creator','youtube_channel':'YouTube Channel','reddit_user':'Reddit User','yc_company':'Startup','local_business':'Local Business','restaurant':'Restaurant','product':'Product','startup':'Startup'}; serviceProduct = map[raw.type] || 'General Business'; } const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)/; const emailMatch = (raw.bio || '').match(emailRegex) || (raw.email || '').match(emailRegex); const extractedEmail = raw.email || (emailMatch ? emailMatch[1] : ''); return { brand: raw.brand_name || 'Unknown', service_product: serviceProduct, instagram_id: raw.handle || raw.instagram_id || '', email: extractedEmail, phone: raw.phone || '', website: raw.website || '', description: (raw.bio || '').substring(0,300), source_platform: raw.source_platform, source_url: raw.source_url, entity_type: raw.type || 'unknown', followers: raw.followers || null, rating: raw.rating || null, reviews: raw.reviews || null, verified: raw.verified || false, profile_pic: raw.profile_pic || '', found_via: raw.found_in || raw.found_via || 'direct', subreddit: raw.subreddit || '', batch: raw.batch || '', extracted_at: raw.extracted_at };"
+          },
+          "name": "Normalize to Universal Schema",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [1250, 300]
+        },
+        {
+          "parameters": {
+            "jsCode": "const brand = $input.item.json; const prompt = `You are a marketing analyst at RFRNCS (https://www.rfrncs.in/), a branding agency.\n\nAnalyze this brand/business and determine if they need branding support.\n\nReturn ONLY valid JSON (no markdown formatting) with these exact keys:\n{\n  \"verdict\": \"High potential lead\" OR \"Low priority lead\",\n  \"reasoning\": [\"reason 1\", \"reason 2\", \"reason 3\"],\n  \"confidence\": 0.85,\n  \"marketing_gaps\": [\"gap 1\", \"gap 2\"],\n  \"priority_score\": 7\n}\n\nBrand Data:\n- Name: ${brand.brand}\n- Service/Product: ${brand.service_product}\n- Website: ${brand.website || 'NONE'}\n- Instagram: ${brand.instagram_id || 'NONE'}\n- Email: ${brand.email || 'NONE'}\n- Phone: ${brand.phone || 'NONE'}\n- Description: ${brand.description}\n- Platform Found: ${brand.source_platform}\n- Followers: ${brand.followers || 'Unknown'}\n- Verified: ${brand.verified ? 'Yes' : 'No'}\n\nEvaluation Criteria:\n1. Website presence (missing = HIGH PRIORITY)\n2. Contact information completeness\n3. Social media presence and verification\n4. Brand description quality\n5. Overall digital footprint\n\nPriority Score (0-10):\n- 8-10: Critical need (no website + weak presence)\n- 5-7: Moderate need (missing key elements)\n- 0-4: Low priority (strong brand presence)\n\nReturn ONLY the JSON object.`; return { ...brand, ai_prompt: prompt };"
+          },
+          "name": "Build AI Prompt",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [1450, 300]
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpQueryAuth",
+            "sendQuery": true,
+            "queryParameters": {
+              "parameters": [
+                { "name": "key", "value": "={{$env.GEMINI_API_KEY}}" }
+              ]
+            },
+            "sendBody": true,
+            "contentType": "json",
+            "body": "={\"contents\":[{\"parts\":[{\"text\":{{$json.ai_prompt}}}]}]}",
+            "options": {}
+          },
+          "name": "Gemini Analysis",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4,
+          "position": [1650, 300]
+        },
+        {
+          "parameters": {
+            "jsCode": "const response = $input.item.json; const brand = $input.item.json; let analysis = { verdict: 'Low priority lead', reasoning: ['Unable to analyze'], confidence: 0.2, marketing_gaps: [], priority_score: 3 }; try { const text = response.candidates?.[0]?.content?.parts?.[0]?.text || ''; const clean = text.replace(/```json\\n?/g,'').replace(/```\\n?/g,'').trim(); analysis = JSON.parse(clean); } catch(e) { } return { brand: brand.brand, service_product: brand.service_product, instagram_id: brand.instagram_id, email: brand.email, phone: brand.phone, website: brand.website, description: brand.description, source_platform: brand.source_platform, source_url: brand.source_url, verdict: analysis.verdict, reasoning: Array.isArray(analysis.reasoning)? analysis.reasoning.join('; ') : String(analysis.reasoning), confidence: analysis.confidence, marketing_gaps: Array.isArray(analysis.marketing_gaps)? analysis.marketing_gaps.join(', ') : String(analysis.marketing_gaps), priority_score: analysis.priority_score || 5, followers: brand.followers, rating: brand.rating, reviews: brand.reviews, verified: brand.verified, extracted_at: brand.extracted_at, analyzed_at: new Date().toISOString() };"
+          },
+          "name": "Parse & Finalize",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [1850, 300]
+        },
+        {
+          "parameters": {
+            "operation": "sort",
+            "sortFieldsUi": { "sortField": [ { "fieldName": "priority_score", "order": "descending" } ] }
+          },
+          "name": "Sort by Priority",
+          "type": "n8n-nodes-base.sort",
+          "typeVersion": 1,
+          "position": [2050, 300]
+        },
+        {
+          "parameters": {
+            "options": { "fileName": "=rfrncs_leads_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv" }
+          },
+          "name": "Convert to CSV",
+          "type": "n8n-nodes-base.convertToFile",
+          "typeVersion": 1,
+          "position": [2250, 200]
+        },
+        {
+          "parameters": {
+            "fromEmail": "your-email@gmail.com",
+            "toEmail": "vihaankulkarni29@gmail.com",
+            "subject": "=🎯 RFRNCS Leads: {{$('Extract Entities').all().length}} brands found ({{$now.format('MMM DD, HH:mm')}})",
+            "emailType": "html",
+            "message": "=<div style=\\\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\\\">\n  <h2 style=\\\"color: #2563eb;\\\">🎯 Lead Generation Complete</h2>\n  \n  <div style=\\\"background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;\\\">\n    <h3 style=\\\"margin-top: 0;\\\">📊 Summary</h3>\n    <p><strong>Source:</strong> {{$('Detect Platform').item.json.platform}}</p>\n    <p><strong>URL:</strong> {{$('Detect Platform').item.json.url}}</p>\n    <p><strong>Brands Found:</strong> {{$('Extract Entities').all().length}}</p>\n    <p><strong>High Priority Leads:</strong> {{$('Parse & Finalize').all().filter(item => item.json.priority_score >= 7).length}}</p>\n  </div>\n  \n  <p>📎 <strong>Attached:</strong> CSV file with complete analysis</p>\n  <p style=\\\"color: #6b7280; font-size: 12px;\\\">Processed at {{$now.format('YYYY-MM-DD HH:mm:ss')}}</p>\n</div>",
+            "options": {}
+          },
+          "name": "Email CSV Report",
+          "type": "n8n-nodes-base.emailSend",
+          "typeVersion": 2,
+          "position": [2450, 200]
+        }
+    "Extract URL": { "main": [ [ { "node": "Detect Platform", "type": "main", "index": 0 } ] ] },
+    "Detect Platform": { "main": [ [ { "node": "Fetch Page", "type": "main", "index": 0 } ] ] },
+    "Fetch Page": { "main": [ [ { "node": "Extract Entities", "type": "main", "index": 0 } ] ] },
+    "Extract Entities": { "main": [ [ { "node": "Normalize to Universal Schema", "type": "main", "index": 0 } ] ] },
+    "Normalize to Universal Schema": { "main": [ [ { "node": "Build AI Prompt", "type": "main", "index": 0 } ] ] },
+    "Build AI Prompt": { "main": [ [ { "node": "Gemini Analysis", "type": "main", "index": 0 } ] ] },
+    "Gemini Analysis": { "main": [ [ { "node": "Parse & Finalize", "type": "main", "index": 0 } ] ] },
+    "Parse & Finalize": { "main": [ [ { "node": "Sort by Priority", "type": "main", "index": 0 } ] ] },
+    "Sort by Priority": { "main": [ [ { "node": "Convert to CSV", "type": "main", "index": 0 } ] ] },
+    "Convert to CSV": { "main": [ [ { "node": "Email CSV Report", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {}
+}

@@ -1,0 +1,348 @@
+{
+  "name": "RFRNCS Enhanced Reddit Marketing Intelligence",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-reddit-intelligence",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rfrncs-reddit-intelligence"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract URL and parameters from webhook body\nconst body = $input.item.json.body || $input.item.json;\nconst url = body.url || body.text || body.link || '';\nconst keywords = body.keywords || ['branding', 'marketing', 'startup', 'logo design', 'rebranding'];\nconst days = body.days || 7;\nconst minUpvotes = body.min_upvotes || 5;\n\nif (!url) {\n  throw new Error('No URL provided in request. Send JSON: {\"url\": \"https://...\", \"keywords\": [\"branding\", \"marketing\"]}');\n}\n\nif (!url.match(/^https?:\\/\\/.+/i)) {\n  throw new Error('Invalid URL format. Must start with http:// or https://');\n}\n\nreturn {\n  url: url,\n  keywords: keywords,\n  days: days,\n  min_upvotes: minUpvotes,\n  requested_at: new Date().toISOString()\n};"
+      },
+      "name": "Extract URL and Parameters",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract subreddit and determine if it's a subreddit or single post\nconst url = $input.item.json.url;\nlet subreddit = null;\nlet postId = null;\nlet isSubreddit = false;\n\ntry {\n  const urlObj = new URL(url);\n  if (urlObj.hostname.includes('reddit.com')) {\n    const pathParts = urlObj.pathname.split('/').filter(p => p);\n    if (pathParts[0] === 'r' && pathParts[1]) {\n      subreddit = pathParts[1];\n      if (pathParts[2] === 'comments' && pathParts[3]) {\n        postId = pathParts[3];\n        isSubreddit = false;\n      } else {\n        isSubreddit = true;\n      }\n    }\n  }\n} catch (e) {\n  throw new Error('Invalid Reddit URL');\n}\n\nif (!subreddit) {\n  throw new Error('No subreddit found in URL');\n}\n\nreturn {\n  url: url,\n  subreddit: subreddit,\n  post_id: postId,\n  is_subreddit: isSubreddit,\n  keywords: $json.keywords,\n  days: $json.days,\n  min_upvotes: $json.min_upvotes\n};"
+      },
+      "name": "Extract Subreddit/Post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "type-check",
+              "leftValue": "={{$json.is_subreddit}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal",
+                "name": "n8n-nodes-base.equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Check Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "getSubreddit",
+        "name": "={{$json.subreddit}}",
+        "sort": "new",
+        "options": {
+          "limit": 50,
+          "time": "week"
+        }
+      },
+      "name": "Fetch Posts with Time Filter",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "getPost",
+        "postId": "={{$json.post_id}}",
+        "options": {}
+      },
+      "name": "Fetch Single Post",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "upvote-filter",
+              "leftValue": "={{$json.ups}}",
+              "rightValue": "={{$json.min_upvotes}}",
+              "operator": {
+                "type": "number",
+                "operation": "largerEqual",
+                "name": "n8n-nodes-base.largerEqual"
+              }
+            },
+            {
+              "id": "selftext-filter",
+              "leftValue": "={{$json.selftext}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty",
+                "name": "n8n-nodes-base.isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Filter High Quality Posts",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "getComments",
+        "postId": "={{$json.id}}",
+        "options": {
+          "limit": 50,
+          "sort": "best"
+        }
+      },
+      "name": "Fetch Comments",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1450, 200]
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "getComments",
+        "postId": "={{$json.id}}",
+        "options": {
+          "limit": 50,
+          "sort": "best"
+        }
+      },
+      "name": "Fetch Comments for Single",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1450, 400]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition",
+        "options": {
+          "outputFormat": "multiline"
+        }
+      },
+      "name": "Merge Posts and Comments",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// RFRNCS AI Classification - Is this relevant for marketing/branding services?\nconst keywords = $json.keywords || ['branding', 'marketing', 'startup', 'logo design', 'rebranding'];\nconst postTitle = $json.title || '';\nconst postContent = $json.selftext || '';\nconst comments = $json.comments_text || '';\nconst fullText = `${postTitle} ${postContent} ${comments}`.toLowerCase();\n\n// Check if any RFRNCS keywords are mentioned\nconst keywordMatches = keywords.filter(keyword => fullText.includes(keyword.toLowerCase()));\nconst relevanceScore = keywordMatches.length > 0 ? keywordMatches.length * 2 : 0;\n\n// Additional scoring factors\nlet marketingRelevance = 0;\n\n// Business-related keywords\nconst businessKeywords = ['startup', 'business', 'company', 'entrepreneur', 'founder', 'launch'];\nif (businessKeywords.some(keyword => fullText.includes(keyword))) marketingRelevance += 2;\n\n// Service-related keywords\nconst serviceKeywords = ['design', 'website', 'logo', 'brand', 'rebranding', 'marketing', 'advertising'];\nif (serviceKeywords.some(keyword => fullText.includes(keyword))) marketingRelevance += 3;\n\n// Pain points indicators\nconst painKeywords = ['need help', 'struggling', 'looking for', 'help with', 'bad design', 'poor branding'];\nif (painKeywords.some(keyword => fullText.includes(keyword))) marketingRelevance += 2;\n\nconst totalScore = relevanceScore + marketingRelevance;\n\nreturn {\n  ...$json,\n  keyword_matches: keywordMatches,\n  relevance_score: totalScore,\n  is_relevant: totalScore >= 3,\n  is_high_priority: totalScore >= 6\n};"
+      },
+      "name": "RFRNCS Relevance Classification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "relevance-filter",
+              "leftValue": "={{$json.is_relevant}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal",
+                "name": "n8n-nodes-base.equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Filter Relevant Posts",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "prompt": "=Generate a brief summary (max 50 words) of this Reddit post focusing on marketing/branding insights for RFRNCS:\n\nTitle: {{ $json.title }}\nContent: {{ $json.selftext }}\n\nFocus on:\n- What business/marketing challenge is discussed?\n- What services might RFRNCS offer to help?\n- Any opportunities for branding or design work?\n\nReturn only the summary, no markdown formatting.",
+        "options": {
+          "maxTokens": 128,
+          "temperature": 0.3
+        }
+      },
+      "name": "AI Summary Generation",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [2250, 200]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=rfrncs_raw_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.txt",
+        "options": {}
+      },
+      "name": "Save Raw Data",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process Reddit posts with enhanced analytics\nconst filteredPosts = $('Filter Relevant Posts').all();\nconst keywords = $json.keywords || [];\nconst subreddit = $json.subreddit;\n\nif (filteredPosts.length === 0) {\n  throw new Error('No relevant posts found for RFRNCS marketing analysis');\n}\n\n// Aggregate content\nlet rawText = `RFRNCS REDDIT MARKETING INTELLIGENCE REPORT\\n`;\nrawText += `=========================================\\n\\n`;\nrawText += `Subreddit: r/${subreddit}\\n`;\nrawText += `Analysis Date: ${new Date().toISOString()}\\n`;\nrawText += `Keywords Monitored: ${keywords.join(', ')}\\n`;\nrawText += `Posts Analyzed: ${filteredPosts.length}\\n`;\nrawText += `High Priority Posts: ${filteredPosts.filter(p => p.json.is_high_priority).length}\\n\\n`;\n\n// Process each post\nfilteredPosts.forEach((post, index) => {\n  const postData = post.json;\n  rawText += `=== POST ${index + 1} ===\\n`;\n  rawText += `Title: ${postData.title}\\n`;\n  rawText += `Author: ${postData.author}\\n`;\n  rawText += `Score: ${postData.score}\\n`;\n  rawText += `Relevance Score: ${postData.relevance_score}\\n`;\n  rawText += `Priority: ${postData.is_high_priority ? 'HIGH' : 'MEDIUM'}\\n`;\n  rawText += `URL: https://reddit.com${postData.permalink}\\n\\n`;\n  rawText += `Content:\\n${postData.selftext || 'No content'}\\n\\n`;\n  rawText += `Comments Summary:\\n${postData.comments_text || 'No comments'}\\n\\n`;\n  rawText += `---\\n\\n`;\n});\n\n// Create quantitative data\nconst categoryCounts = {};\nconst priorityCounts = { high: 0, medium: 0 };\nconst scoreDistribution = [];\n\nfilteredPosts.forEach(post => {\n  const data = post.json;\n  \n  // Count by relevance score\n  if (data.relevance_score >= 6) priorityCounts.high++;\n  else priorityCounts.medium++;\n  \n  // Score distribution\n  scoreDistribution.push(data.relevance_score);\n});\n\nconst quantitativeData = [\n  { metric: 'Total Posts', value: filteredPosts.length, count: filteredPosts.length },\n  { metric: 'High Priority', value: 'High Relevance Score', count: priorityCounts.high },\n  { metric: 'Medium Priority', value: 'Medium Relevance Score', count: priorityCounts.medium },\n  { metric: 'Avg Relevance Score', value: 'Average', count: Math.round(scoreDistribution.reduce((a, b) => a + b, 0) / scoreDistribution.length * 100) / 100 }\n];\n\nreturn {\n  subreddit: subreddit,\n  keywords: keywords,\n  raw_text: rawText,\n  post_count: filteredPosts.length,\n  high_priority_count: priorityCounts.high,\n  quantitative_data: quantitativeData\n};"
+      },
+      "name": "Process Marketing Intelligence",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2450, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build RFRNCS marketing analysis prompt\nconst data = $input.item.json;\n\nconst prompt = `You are a senior marketing strategist at RFRNCS (https://www.rfrncs.in/), a premier branding and marketing agency. Analyze this Reddit data to identify business opportunities, potential leads, and marketing insights.\n\nReturn ONLY valid JSON with:\n{\n  \"executive_summary\": \"Brief overview of key opportunities\",\n  \"hot_leads\": [{\"company_type\": \"Startup/SMB/Enterprise\", \"pain_points\": [\"issue1\"], \"service_fit\": \"Branding/Marketing/Design\", \"urgency\": \"high/medium/low\"}],\n  \"market_insights\": [{\"insight\": \"market trend\", \"frequency\": 8, \"opportunity\": \"RFRNCS can capitalize\"}],\n  \"competitor_analysis\": [{\"competitor_type\": \"Direct/Indirect\", \"weakness\": \"description\", \"rfrncs_advantage\": \"differentiation\"}],\n  \"action_items\": [\"specific recommendation for RFRNCS\"],\n  \"confidence_score\": 0.88\n}\n\nReddit Data to Analyze:\n${data.raw_text}\n\nFocus on identifying actionable business opportunities for RFRNCS.`;\n\nreturn {\n  ...data,\n  ai_prompt: prompt\n};"
+      },
+      "name": "Build Marketing Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2650, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$env.GEMINI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\"contents\":[{\"parts\":[{\"text\":{{$json.ai_prompt}}}]}]}",
+        "options": {}
+      },
+      "name": "Gemini Marketing Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2850, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Gemini response and create enhanced output\nconst response = $input.item.json;\nconst data = $input.item.json;\n\nlet analysis = {\n  executive_summary: \"Analysis failed\",\n  hot_leads: [],\n  market_insights: [],\n  competitor_analysis: [],\n  action_items: [],\n  confidence_score: 0\n};\n\ntry {\n  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  const cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  analysis = JSON.parse(cleanText);\n} catch (e) {\n  console.error('Gemini parse error:', e);\n}\n\n// Create enhanced CSV\nlet csvContent = 'Metric,Value,Count\\n';\ndata.quantitative_data.forEach(item => {\n  csvContent += `${item.metric.replace(/,/g, ';')},${item.value.replace(/,/g, ';')},${item.count}\\n`;\n});\n\n// Add marketing insights to CSV\nanalysis.market_insights.forEach(insight => {\n  csvContent += `Market Insight,${insight.insight.replace(/,/g, ';')},${insight.frequency}\\n`;\n});\n\n// Create comprehensive explanation\nconst explanation = `RFRNCS REDDIT MARKETING INTELLIGENCE REPORT\\n`;\nnexplanation += `=============================================\\n\\n`;\nexplanation += `Generated: ${new Date().toISOString()}\\n`;\nexplanation += `Subreddit: r/${data.subreddit}\\n`;\nexplanation += `Keywords: ${data.keywords.join(', ')}\\n\\n`;\n\nexplanation += `EXECUTIVE SUMMARY\\n`;\nexplanation += `${'='.repeat(16)}\\n${analysis.executive_summary}\\n\\n`;\n\nexplanation += `HOT LEADS IDENTIFIED\\n`;\nexplanation += `${'='.repeat(21)}\\n${analysis.hot_leads.map(lead => `- ${lead.company_type}: ${lead.pain_points.join(', ')} (${lead.service_fit}) - Urgency: ${lead.urgency}`).join('\\n')}\\n\\n`;\n\nexplanation += `MARKET INSIGHTS\\n`;\nexplanation += `${'='.repeat(15)}\\n${analysis.market_insights.map(insight => `- ${insight.insight} (frequency: ${insight.frequency}) - ${insight.opportunity}`).join('\\n')}\\n\\n`;\n\nexplanation += `COMPETITOR ANALYSIS\\n`;\nexplanation += `${'='.repeat(20)}\\n${analysis.competitor_analysis.map(comp => `- ${comp.competitor_type}: ${comp.weakness} - RFRNCS Advantage: ${comp.rfrncs_advantage}`).join('\\n')}\\n\\n`;\n\nexplanation += `ACTION ITEMS FOR RFRNCS\\n`;\nexplanation += `${'='.repeat(27)}\\n${analysis.action_items.map(action => `- ${action}`).join('\\n')}\\n\\n`;\n\nexplanation += `CONFIDENCE SCORE: ${analysis.confidence_score}\\n`;\n\nexplanation += `POSTS ANALYZED: ${data.post_count} (${data.high_priority_count} high priority)\\n`;\n\nreturn {\n  subreddit: data.subreddit,\n  keywords: data.keywords,\n  csv_data: csvContent,\n  explanation_text: explanation,\n  analysis: analysis,\n  post_count: data.post_count,\n  high_priority_count: data.high_priority_count\n};"
+      },
+      "name": "Create Enhanced Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3050, 400]
+    },
+    {
+      "parameters": {
+        "mode": "csv",
+        "fileName": "=rfrncs_marketing_intel_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
+        "options": {}
+      },
+      "name": "Save CSV Report",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [3250, 300]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=rfrncs_marketing_summary_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.txt",
+        "options": {}
+      },
+      "name": "Save Summary Report",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [3250, 500]
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@gmail.com",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Reddit Intelligence: r/{{$json.subreddit}} ({{$json.high_priority_count}} Hot Leads!)",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h2 style=\"color: #2563eb;\">🎯 RFRNCS Reddit Marketing Intelligence</h2>\n  \n  <div style=\"background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0;\">📊 Intelligence Summary</h3>\n    <p><strong>Subreddit:</strong> r/{{$json.subreddit}}</p>\n    <p><strong>Posts Analyzed:</strong> {{$json.post_count}}</p>\n    <p><strong>🔥 Hot Leads Found:</strong> {{$json.high_priority_count}}</p>\n    <p><strong>Keywords Monitored:</strong> {{$json.keywords.join(', ')}}</p>\n    <p><strong>Executive Summary:</strong> {{$json.analysis.executive_summary.substring(0, 200)}}...</p>\n  </div>\n  \n  <div style=\"background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0; color: #92400e;\">💰 Immediate Opportunities</h3>\n    <p>{{$json.analysis.hot_leads.length}} potential leads identified</p>\n    <p>{{$json.analysis.action_items.length}} actionable recommendations</p>\n  </div>\n  \n  <p>📎 <strong>Attachments:</strong></p>\n  <ul>\n    <li>CSV Report: Quantitative marketing intelligence</li>\n    <li>Summary Report: Detailed insights and recommendations</li>\n    <li>Raw Data: Complete Reddit posts and comments</li>\n  </ul>\n  \n  <p style=\"color: #6b7280; font-size: 12px;\">Generated: {{$now.format('YYYY-MM-DD HH:mm:ss')}} | RFRNCS AI Marketing Intelligence</p>\n</div>",
+        "attachments": "={{$node['Save CSV Report'].binary.data}},{{$node['Save Summary Report'].binary.data}},{{$node['Save Raw Data'].binary.data}}",
+        "options": {}
+      },
+      "name": "Email Intelligence Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [3450, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [ [ { "node": "Extract URL and Parameters", "type": "main", "index": 0 } ] ] },
+    "Extract URL and Parameters": { "main": [ [ { "node": "Extract Subreddit/Post", "type": "main", "index": 0 } ] ] },
+    "Extract Subreddit/Post": { "main": [ [ { "node": "Check Type", "type": "main", "index": 0 } ] ] },
+    "Check Type": { "main": [ [ { "node": "Fetch Posts with Time Filter", "type": "main", "index": 0 } ], [ { "node": "Fetch Single Post", "type": "main", "index": 0 } ] ] },
+    "Fetch Posts with Time Filter": { "main": [ [ { "node": "Filter High Quality Posts", "type": "main", "index": 0 } ] ] },
+    "Fetch Single Post": { "main": [ [ { "node": "Fetch Comments for Single", "type": "main", "index": 0 } ] ] },
+    "Filter High Quality Posts": { "main": [ [ { "node": "Fetch Comments", "type": "main", "index": 0 } ] ] },
+    "Fetch Comments": { "main": [ [ { "node": "Merge Posts and Comments", "type": "main", "index": 0 } ] ] },
+    "Fetch Comments for Single": { "main": [ [ { "node": "Merge Posts and Comments", "type": "main", "index": 1 } ] ] },
+    "Merge Posts and Comments": { "main": [ [ { "node": "RFRNCS Relevance Classification", "type": "main", "index": 0 } ] ] },
+    "RFRNCS Relevance Classification": { "main": [ [ { "node": "Filter Relevant Posts", "type": "main", "index": 0 } ] ] },
+    "Filter Relevant Posts": { "main": [ [ { "node": "AI Summary Generation", "type": "main", "index": 0 }, { "node": "Process Marketing Intelligence", "type": "main", "index": 1 } ] ] },
+    "AI Summary Generation": { "main": [ [ { "node": "Save Raw Data", "type": "main", "index": 0 } ] ] },
+    "Save Raw Data": { "main": [ [ { "node": "Build Marketing Analysis", "type": "main", "index": 0 } ] ] },
+    "Process Marketing Intelligence": { "main": [ [ { "node": "Build Marketing Analysis", "type": "main", "index": 0 } ] ] },
+    "Build Marketing Analysis": { "main": [ [ { "node": "Gemini Marketing Analysis", "type": "main", "index": 0 } ] ] },
+    "Gemini Marketing Analysis": { "main": [ [ { "node": "Create Enhanced Output", "type": "main", "index": 0 } ] ] },
+    "Create Enhanced Output": { "main": [ [ { "node": "Save CSV Report", "type": "main", "index": 0 }, { "node": "Save Summary Report", "type": "main", "index": 0 } ] ] },
+    "Save CSV Report": { "main": [ [ { "node": "Email Intelligence Report", "type": "main", "index": 0 } ] ] },
+    "Save Summary Report": { "main": [ [ { "node": "Email Intelligence Report", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {}
+}

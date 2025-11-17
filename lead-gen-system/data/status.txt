@@ -1,0 +1,6 @@
+Last Run: 2025-11-13 20:35:44
+Businesses Scraped: 5
+Websites Checked: 5
+Leads in Sheet: 3
+Errors: 3
+Next Run: Manual

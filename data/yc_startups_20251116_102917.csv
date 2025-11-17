@@ -1,0 +1,6 @@
+name,batch,industry,location,website_present,website,description,description_length,logo,video,score
+Summer 2013,,"CasetextSan Francisco, CA, USA",,False,,,0,,,9
+Summer 2015,,"Leaders In TechSan Francisco, CA, USA",,False,,,0,,,9
+Winter 2015,,"QuantierraNew York, NY, USA",Real Estate,False,,,0,,,9
+Summer 2014,,"MetricWireKitchener, ON, Canada",Healthcare IT,False,,,0,,,9
+Summer 2014,,"BillforwardSan Francisco, CA, USA",,False,,,0,,,9

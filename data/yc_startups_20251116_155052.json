@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Machine Zone",
+    "batch": "Winter 2008",
+    "industry": "Consumer, Gaming",
+    "location": "Machine Zone Palo Alto, CA",
+    "website": "",
+    "description": "Pioneers of mobile social gaming.",
+    "logo": "https://bookface-images.s3.amazonaws.com/small_logos/b8a10d341a50957a4b0c63d8f94e76f52fedfb9c.png",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/machine-zone",
+    "score": 9,
+    "website_present": false,
+    "description_length": 33
+  },
+  {
+    "name": "Mio",
+    "batch": "Winter 2016",
+    "industry": "B2B, Engineering, Product and Design",
+    "location": "Mio Austin, TX",
+    "website": "",
+    "description": "Mio powers seamless communication between workplace chat apps.",
+    "logo": "https://bookface-images.s3.amazonaws.com/small_logos/d2e2140644182cb7ec4a70381a94543d8c8de82a.png",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/mio",
+    "score": 9,
+    "website_present": false,
+    "description_length": 62
+  },
+  {
+    "name": "The Human Utility",
+    "batch": "Winter 2015",
+    "industry": "Unspecified",
+    "location": "The Human Utility Oakland, CA",
+    "website": "",
+    "description": "The Human Utility seeks to eliminate water service disconnections for…",
+    "logo": "https://bookface-images.s3.amazonaws.com/small_logos/ddcada339c9ae420abc290b01a1f11ded7218d73.png",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/the-human-utility",
+    "score": 9,
+    "website_present": false,
+    "description_length": 70
+  }
+]

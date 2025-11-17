@@ -1,0 +1,4 @@
+name,batch,industry,location,website_present,website,detail_url,description,description_length,logo,video,team_size,founders,github,score
+Casetext,Summer 2013,"B2B, Legal","Casetext San Francisco, CA",False,,,We make the world's laws free and understandable.,49,,,,,,11
+Leaders In Tech,Summer 2015,Unspecified,"Leaders In Tech San Francisco, CA",False,,,"Helping founders improve themselves, their companies, and the world.",68,,,,,,11
+Quantierra,Winter 2015,"Real Estate and Construction, Housing and Real Estate","Quantierra New York, NY",False,,,Sourcing investment real estate,31,,,,,,11

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeadEntity",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "source": { "type": "string" },
+    "source_url": { "type": "string" },
+    "source_type": { "type": "string" },
+    "name": { "type": "string" },
+    "industry_category": { "type": "string" },
+    "description": { "type": "string" },
+    "website": { "type": "string" },
+    "website_present": { "type": "boolean" },
+    "socials": { "type": "object" },
+    "contact_info": { "type": "object" },
+    "metrics": { "type": "object" },
+    "assets": { "type": "object" },
+    "score": { "type": "number" },
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "verdict": { "type": "string" },
+        "reasoning": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": "number" }
+      },
+      "required": ["verdict", "confidence"]
+    },
+    "timestamp": { "type": "string" },
+    "hash_key": { "type": "string" }
+  },
+  "required": ["name", "industry_category", "website_present"]
+}

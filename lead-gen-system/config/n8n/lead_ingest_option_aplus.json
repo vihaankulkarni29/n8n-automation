@@ -1,0 +1,479 @@
+{
+  "name": "Lead Ingest - Option A+ (Email → Normalize → Score → AI → Store/Email)",
+  "nodes": [
+    {
+      "parameters": {
+        "downloadAttachments": false,
+        "options": {
+          "allowUnauthorizedCerts": false,
+          "customEmailConfig": {}
+        }
+      },
+      "name": "IMAP Email",
+      "type": "n8n-nodes-base.imapEmail",
+      "typeVersion": 1,
+      "position": [
+        180,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function extract(text){\n  if(!text) return '';\n  const ht = text.match(/#[A-Za-z0-9_]+/);\n  if(ht) return ht[0];\n  const url = text.match(/https?:\\/\\/[^\\s>]+/i);\n  return url ? url[0] : '';\n}\nreturn items.map(i=>{\n  const j = i.json || {};\n  const subject = j.subject || '';\n  const text = j.text || '';\n  const html = j.html || '';\n  const found = extract(subject) || extract(text) || extract(html);\n  return { json: { query: found } };\n});\n"
+      },
+      "name": "Extract Query From Email",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        440,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function detect(input) {\n  const text = String(input || '').trim();\n  if (!text) return { source_type: 'generic', value: '' };\n  if (text.startsWith('#')) {\n    return { source_type: 'instagram_hashtag', value: text.slice(1) };\n  }\n  let url = text;\n  try { url = new URL(text).href; } catch(e) {}\n  const lower = url.toLowerCase();\n  if (lower.includes('ycombinator.com/companies')) return { source_type: 'yc', value: url };\n  if (lower.includes('modemonline')) return { source_type: 'modemonline', value: url };\n  if (lower.includes('justdial.com')) return { source_type: 'justdial', value: url };\n  if (lower.includes('zomato.com')) return { source_type: 'zomato', value: url };\n  if (lower.includes('instagram.com')) return { source_type: 'instagram', value: url };\n  if (lower.includes('linkedin.com')) return { source_type: 'linkedin', value: url };\n  if (lower.includes('twitter.com') || lower.includes('x.com')) return { source_type: 'twitter', value: url };\n  if (lower.includes('reddit.com')) return { source_type: 'reddit', value: url };\n  return { source_type: 'generic', value: url };\n}\nreturn items.map(i => {\n  const q = (i.json && (i.json.query || i.json.text || i.json.url)) || '';\n  const res = detect(q);\n  return { json: { ...i.json, ...res } };\n});\n"
+      },
+      "name": "Detect Source",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        700,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.source_type}}",
+              "operation": "equal",
+              "value2": "instagram_hashtag"
+            },
+            {
+              "value1": "={{$json.source_type}}",
+              "operation": "equal",
+              "value2": "linkedin_hashtag"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF Hashtag?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        960,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.map(i => {\n  const j = i.json || {};\n  const tag = j.value || j.hashtag || '';\n  const platform = j.source_type || 'instagram_hashtag';\n  const out = {\n    sourceType: platform,\n    source_url: '#' + tag,\n    account_name: '',\n    bio: '',\n    profile_website: '',\n    profile_url: '',\n    followers: 0,\n    industry: 'Unspecified'\n  };\n  return { json: out };\n});\n"
+      },
+      "name": "Build Hashtag Item",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        70
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.value || $json.url || $json.source_url}}",
+        "responseFormat": "string",
+        "options": {}
+      },
+      "name": "HTTP Fetch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function extractMeta(html, name, attr, value) {\n  const regex = new RegExp('<' + name + '[^>]*' + attr + '=[\\\"']' + value + '[\\\"'][^>]*>', 'i');\n  const m = html.match(regex);\n  if (!m) return null;\n  const tag = m[0];\n  const contentMatch = tag.match(/content=[\\\"']([^\\\"']*)[\\\"']/i);\n  return contentMatch ? contentMatch[1] : null;\n}\nfunction extractTitle(html){\n  const m = html.match(/<title[^>]*>([\\s\\S]*?)<\\/title>/i);\n  return m ? m[1].trim() : '';\n}\nfunction extractCanonical(html){\n  const m = html.match(/<link[^>]+rel=[\\\"']canonical[\\\"'][^>]*href=[\\\"']([^\\\"']+)[\\\"'][^>]*>/i);\n  return m ? m[1] : '';\n}\nfunction sanitize(s){\n  return (s||'').replace(/[\\n\\r\\t]+/g,' ').trim();\n}\nfunction detectFromUrl(u){\n  try {\n    const h = new URL(u).hostname.toLowerCase();\n    if (h.includes('ycombinator.com')) return 'yc';\n    if (h.includes('justdial.com')) return 'justdial';\n    if (h.includes('reddit.com')) return 'reddit';\n    if (h.includes('twitter.com') || h.includes('x.com')) return 'twitter';\n    if (h.includes('linkedin.com')) return 'linkedin';\n    if (h.includes('instagram.com')) return 'instagram';\n  } catch(e) {}\n  return 'generic';\n}\nreturn items.map(i => {\n  const j = i.json || {};\n  const html = String(j.body || j.html || '');\n  let name = extractMeta(html, 'meta', 'property', 'og:site_name') || extractTitle(html);\n  let desc = extractMeta(html, 'meta', 'name', 'description') || extractMeta(html, 'meta', 'property', 'og:description') || '';\n  const canonical = extractCanonical(html);\n  name = sanitize(name);\n  desc = sanitize(desc);\n  const derivedType = detectFromUrl(canonical);\n  const out = {\n    sourceType: j.source_type || j.sourceType || derivedType || 'generic',\n    source_url: j.value || j.url || j.source_url || canonical || '',\n    name: name,\n    description: desc,\n    website: canonical || j.value || j.url || '',\n    metrics: {},\n    assets: {},\n    raw_html: html\n  };\n  return { json: out };\n});\n"
+      },
+      "name": "Quick Parse HTML",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function safeParse(s){ try { return JSON.parse(s); } catch(e){ return null; } }\nfunction extractLdJson(html){\n  const re = /<script[^>]+type=[\\\"']application\\/ld\\+json[\\\"'][^>]*>([\\s\\S]*?)<\\/script>/gi;\n  const arr = []; let m;\n  while ((m = re.exec(html)) !== null) { const block = (m[1]||'').trim(); const parsed = safeParse(block); if (parsed) arr.push(parsed); }\n  return arr;\n}\nfunction extractNextData(html){\n  const m = html.match(/<script[^>]+id=[\\\"']__NEXT_DATA__[\\\"'][^>]*>([\\s\\S]*?)<\\/script>/i);\n  if (!m) return null;\n  return safeParse(m[1]);\n}\nfunction deepCollect(obj, predicate, acc){\n  acc = acc || [];\n  if (!obj || acc.length > 500) return acc;\n  if (Array.isArray(obj)) { for (const it of obj) deepCollect(it, predicate, acc); return acc; }\n  if (typeof obj === 'object') { if (predicate(obj)) acc.push(obj); for (const k of Object.keys(obj)) deepCollect(obj[k], predicate, acc); }\n  return acc;\n}\nfunction uniqBy(arr, keyFn){ const m = new Map(); for (const x of arr){ const k = keyFn(x); if (!m.has(k)) m.set(k,x); } return Array.from(m.values()); }\nfunction detectFromUrl(u){ const L = String(u||'').toLowerCase(); if (L.includes('ycombinator.com/companies')) return 'yc'; if (L.includes('justdial.com')) return 'justdial'; if (L.includes('reddit.com')) return 'reddit'; if (L.includes('twitter.com')||L.includes('x.com')) return 'twitter'; if (L.includes('linkedin.com')) return 'linkedin'; if (L.includes('instagram.com')) return 'instagram'; return 'generic'; }\nfunction extractHrefs(html){ const out = []; const re = /href=\\\"([^\\\"#]+)\\\"|href='([^'#]+)'/gi; let m; while((m=re.exec(html))!==null){ const u = m[1]||m[2]; if(u && /^https?:\\/\\//i.test(u)) out.push(u); } return Array.from(new Set(out)); }\nfunction mapYC(o, baseUrl){ const name = o.name || ''; const website = o.website || o.www || o.url || ''; const description = o.description || o.one_liner || o.shortDescription || ''; const industries = o.industries || o.tags || o.categories || []; const slug = o.slug || o.permalink || ''; const source_url = slug ? ('https://www.ycombinator.com/companies/' + slug) : baseUrl; return { sourceType: 'yc', source_url: source_url, name: name, website: website, description: description, industry: Array.isArray(industries) ? (industries[0]||'Unspecified') : (industries||'Unspecified'), metrics: {}, assets: {} }; }\nfunction mapJD(o, baseUrl){ const name = o.name || ''; const website = o.url || ''; const phone = o.telephone || ''; const adr = o.address || {}; const address = (typeof adr === 'string') ? adr : [adr.streetAddress, adr.addressLocality, adr.addressRegion, adr.postalCode].filter(Boolean).join(', '); const ar = o.aggregateRating || {}; const rating = (ar && Number(ar.ratingValue)) || null; const reviews = (ar && Number(ar.reviewCount)) || 0; return { sourceType: 'justdial', source_url: baseUrl, name: name, website: website, listing_description: o.description || address || '', phone: phone, contact_info: { phone: phone }, metrics: { rating: rating, reviews: reviews }, assets: {}, industry: 'Restaurants' }; }\nfunction mapReddit(html, baseUrl){ const ogTitle = (html.match(/<meta[^>]+property=\\\"og:title\\\"[^>]+content=\\\"([^\\\"]*)/i) || [,''])[1]; const authorFromJson = (html.match(/\\\"author\\\":\\\"([^\\\"]+)\\\"/) || [,''])[1]; const authorFromUser = (html.match(/href=\\\"\\/user\\/([^\\\"\\/?#]+)\\\"/) || [,''])[1]; const author = authorFromJson || authorFromUser || ''; const up = parseInt((html.match(/\\\"score\\\":(\\d+)/) || [,'0'])[1], 10) || 0; const links = extractHrefs(html).filter(u=>!u.includes('reddit.com')); const website = links[0] || ''; return { sourceType: 'reddit', source_url: baseUrl, author: author, thread_excerpt: ogTitle || '', website: website, profile_url: author ? ('https://www.reddit.com/user/' + author) : baseUrl, metrics: { upvotes: up }, assets: {} }; }\nfunction mapTwitter(html, baseUrl){ const ogTitle = (html.match(/<meta[^>]+property=\\\"og:title\\\"[^>]+content=\\\"([^\\\"]*)/i) || [,''])[1]; const metaAuthor = (html.match(/<meta[^>]+name=\\\"author\\\"[^>]+content=\\\"([^\\\"]*)/i) || [,''])[1]; const links = extractHrefs(html).filter(u=>!u.includes('twitter.com') && !u.includes('x.com')); const website = links[0] || ''; return { sourceType: 'twitter', source_url: baseUrl, author: metaAuthor || '', caption: ogTitle || '', website: website, profile_url: baseUrl, metrics: {}, assets: {} }; }\nfunction mapLinkedIn(html, baseUrl){ const ogTitle = (html.match(/<meta[^>]+property=\\\"og:title\\\"[^>]+content=\\\"([^\\\"]*)/i) || [,''])[1]; const ogDesc = (html.match(/<meta[^>]+property=\\\"og:description\\\"[^>]+content=\\\"([^\\\"]*)/i) || [,''])[1]; const links = extractHrefs(html).filter(u=>!u.includes('linkedin.com')); const website = links[0] || ''; return { sourceType: 'linkedin', source_url: baseUrl, author: '', caption: ogTitle || '', description: ogDesc || '', website: website, profile_url: baseUrl, metrics: {}, assets: {} }; }\nreturn items.flatMap(i=>{\n  const j = i.json || {};\n  const html = j.raw_html || j.html || j.body || '';\n  const baseUrl = j.source_url || j.website || '';\n  const src = (j.sourceType || detectFromUrl(baseUrl));\n  if (!html) return [{ json: j }];\n  const out = [];\n  if (src === 'yc'){\n    const next = extractNextData(html);\n    if (next){\n      const candidates = deepCollect(next, function(o){ return o && typeof o==='object' && typeof o.name==='string' && (o.website||o.www||o.url||o.slug); });\n      for (const c of candidates){ out.push({ json: mapYC(c, baseUrl) }); }\n    }\n  } else if (src === 'justdial'){\n    const blocks = extractLdJson(html);\n    for (const b of blocks){\n      const arr = Array.isArray(b) ? b : (b['@graph'] || [b]);\n      for (const ent of arr){\n        const types = [].concat(ent['@type']||[]);\n        if (types.includes('LocalBusiness') || types.includes('Organization')){ out.push({ json: mapJD(ent, baseUrl) }); }\n      }\n    }\n  } else if (src === 'reddit'){\n    out.push({ json: mapReddit(html, baseUrl) });\n  } else if (src === 'twitter'){\n    out.push({ json: mapTwitter(html, baseUrl) });\n  } else if (src === 'linkedin'){\n    out.push({ json: mapLinkedIn(html, baseUrl) });\n  }\n  if (out.length === 0){\n    out.push({ json: { sourceType: src, source_url: baseUrl, name: j.name||'', description: j.description||'', website: j.website||'', metrics: {}, assets: {} } });\n  }\n  return uniqBy(out, function(x){ return (x.json.name||x.json.author||'') + '|' + (x.json.website||'') + '|' + (x.json.source_url||''); });\n});\n"
+      },
+      "name": "Extract Entities",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough"
+      },
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function normalize(item) {\n  const src = (item.sourceType || item.source_type || '').toLowerCase();\n  const out = {\n    source: src || 'generic',\n    source_url: item.url || item.source_url || '',\n    name: '',\n    industry_category: '',\n    description: '',\n    website: item.website || '',\n    website_present: !!(item.website),\n    socials: item.socials || {},\n    contact_info: item.contact_info || {},\n    metrics: item.metrics || {},\n    assets: item.assets || {}\n  };\n  switch (src) {\n    case 'yc':\n      out.name = item.name || '';\n      out.industry_category = item.industry || item.category || 'Unspecified';\n      out.description = item.description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      break;\n    case 'modemonline':\n      out.name = item.name || '';\n      out.industry_category = item.category || 'Fashion/Apparel';\n      out.description = item.description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      out.contact_info = { email: item.email || '', phone: item.phone || '' };\n      break;\n    case 'justdial':\n    case 'zomato':\n      out.name = item.name || '';\n      out.industry_category = item.cuisines || 'Restaurants';\n      out.description = item.listing_description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      out.contact_info = { phone: item.phone || '', email: item.email || '' };\n      out.metrics = {\n        reviews: item.reviews || 0,\n        rating: item.rating || null,\n        price_level: item.price_level || null\n      };\n      break;\n    case 'instagram_hashtag':\n    case 'linkedin_hashtag':\n      out.name = item.account_name || item.handle || '';\n      out.industry_category = item.industry || 'Unspecified';\n      out.description = item.bio || item.tagline || '';\n      out.website = item.profile_website || '';\n      out.website_present = !!out.website;\n      out.socials = Object.assign({}, out.socials, {\n        profile: item.profile_url || ''\n      });\n      out.metrics = Object.assign({}, out.metrics, {\n        followers: item.followers || 0\n      });\n      break;\n    case 'reddit':\n    case 'linkedin':\n    case 'twitter':\n      out.name = item.account_name || item.author || '';\n      out.industry_category = item.industry || 'Unspecified';\n      out.description = item.bio || item.thread_excerpt || item.caption || item.description || '';\n      out.website = item.website || '';\n      out.website_present = !!out.website;\n      out.socials = Object.assign({}, out.socials, {\n        profile: item.profile_url || ''\n      });\n      out.metrics = Object.assign({}, out.metrics, {\n        followers: item.followers || 0,\n        upvotes: item.upvotes || (item.metrics && item.metrics.upvotes) || 0\n      });\n      break;\n    default:\n      out.name = item.name || '';\n      out.industry_category = item.industry || item.category || 'Unspecified';\n      out.description = item.description || item.summary || '';\n      break;\n  }\n  out.socials = out.socials || {};\n  out.contact_info = out.contact_info || {};\n  return out;\n}\nreturn items.map(i => ({ json: normalize(i.json || i) }));\n"
+      },
+      "name": "Normalize",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function computeScore(n) {\n  let score = 0;\n  if (!n.website_present) score += 3;\n  const desc = (n.description || '').trim();\n  if (desc.length > 0 && desc.length < 150) score += 2;\n  const hasSocials = n.socials && Object.keys(n.socials).length > 0 && Object.values(n.socials).some(Boolean);\n  if (!hasSocials) score += 2;\n  const followers = Number((n.metrics && n.metrics.followers) || 0);\n  const reviews = Number((n.metrics && n.metrics.reviews) || 0);\n  const brandingQuality = (n.assets && n.assets.branding_quality) || 'unknown';\n  if ((followers >= 5000 || reviews >= 200) && (brandingQuality === 'poor' || brandingQuality === 'unknown')) {\n    score += 2;\n  }\n  return score;\n}\nreturn items.map(i => {\n  const n = i.json || i;\n  const score = computeScore(n);\n  return { json: { ...n, score } };\n});\n"
+      },
+      "name": "Score",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function buildPrompt(n){\n  const system = 'You are a brand strategy analyst at rfrncs (https://www.rfrncs.in/). Analyze ONLY the provided data and return JSON with keys: verdict (\\\"Needs RFRNCS branding support\\\" | \\\"Strong brand identity, low priority.\\\"), reasoning (array of short bullets), confidence (0-1).';\n  const payload = JSON.stringify({\n    name: n.name,\n    industry_category: n.industry_category,\n    description: n.description,\n    website_present: n.website_present,\n    socials: n.socials,\n    metrics: n.metrics,\n    assets: n.assets,\n    score: n.score\n  });\n  return system + '\n\nData:\n' + payload + '\n\nReturn JSON only.';\n}\nreturn items.map(i=>{\n  const n = i.json || {};\n  return { json: { ...n, __ai_prompt: buildPrompt(n) } };\n});\n"
+      },
+      "name": "Build AI Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={{$env.GEMINI_API_KEY}}",
+        "sendBody": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        { \"text\": {{$json.__ai_prompt}} }\n      ]\n    }\n  ]\n}"
+      },
+      "name": "Gemini Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.map(i=>{\n  const j = i.json || {};\n  let text = '';\n  try {\n    text = j.candidates[0].content.parts[0].text || '';\n  } catch(e) { text = ''; }\n  let analysis = { verdict: 'Strong brand identity, low priority.', reasoning: ['insufficient evidence'], confidence: 0.2 };\n  if (text) {\n    try { analysis = JSON.parse(text); } catch(e) {}\n  }\n  return { json: { ...j, analysis } };\n});\n"
+      },
+      "name": "Parse Gemini",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function djb2(str) {\n  let hash = 5381;\n  for (let i = 0; i < str.length; i++) {\n    hash = ((hash << 5) + hash) + str.charCodeAt(i);\n    hash = hash & hash;\n  }\n  return (hash >>> 0).toString(16);\n}\nreturn items.map(i => {\n  const j = i.json || i;\n  const now = new Date().toISOString();\n  const name = (j.name || '').toLowerCase();\n  const site = (j.website || j.source_url || '').toLowerCase();\n  const src = (j.source || j.source_type || 'generic').toLowerCase();\n  const key = djb2([name, site, src].join('|'));\n  return { json: { ...j, timestamp: now, hash_key: key } };\n});\n"
+      },
+      "name": "Finalize",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2700,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "options": {
+          "convertAll": true
+        }
+      },
+      "name": "JSON → Binary",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        70
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "=lead-gen-system/integration/n8n/out/lead_{{$json.hash_key}}.json",
+        "dataPropertyName": "data"
+      },
+      "name": "Write JSON File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        3060,
+        70
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "options": {
+          "fileName": "=lead_{{$json.hash_key}}.csv"
+        }
+      },
+      "name": "JSON → CSV",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        330
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "RFRNCS Lead CSV",
+        "text": "Attached: latest lead CSV.",
+        "options": {
+          "attachments": [
+            {
+              "property": "data"
+            }
+          ]
+        }
+      },
+      "name": "Email CSV",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        3060,
+        330
+      ]
+    }
+  ],
+  "connections": {
+    "IMAP Email": {
+      "main": [
+        [
+          {
+            "node": "Extract Query From Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Query From Email": {
+      "main": [
+        [
+          {
+            "node": "Detect Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Source": {
+      "main": [
+        [
+          {
+            "node": "IF Hashtag?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Hashtag?": {
+      "main": [
+        [
+          {
+            "node": "Build Hashtag Item",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Fetch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Fetch": {
+      "main": [
+        [
+          {
+            "node": "Quick Parse HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Hashtag Item": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quick Parse HTML": {
+      "main": [
+        [
+          {
+            "node": "Extract Entities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Entities": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score": {
+      "main": [
+        [
+          {
+            "node": "Build AI Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Gemini Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Analysis": {
+      "main": [
+        [
+          {
+            "node": "Parse Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Gemini": {
+      "main": [
+        [
+          {
+            "node": "Finalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize": {
+      "main": [
+        [
+          {
+            "node": "JSON → Binary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "JSON → CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON → Binary": {
+      "main": [
+        [
+          {
+            "node": "Write JSON File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON → CSV": {
+      "main": [
+        [
+          {
+            "node": "Email CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null
+}

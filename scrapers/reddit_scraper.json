@@ -1,0 +1,257 @@
+
+{
+  "name": "Reddit Scraper Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reddit-scraper",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "reddit-scraper"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract URL from webhook body\nconst body = $input.item.json.body || $input.item.json;\nconst url = body.url || body.text || body.link || '';\n\nif (!url) {\n  throw new Error('No URL provided in request. Send JSON: {\"url\": \"https://...\"}');\n}\n\n// Validate URL format\nif (!url.match(/^https?:\\/\\/.+/i)) {\n  throw new Error('Invalid URL format. Must start with http:// or https://');\n}\n\nreturn {\n  url: url,\n  requested_at: new Date().toISOString()\n};"
+      },
+      "name": "Extract URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract subreddit and determine if it's a subreddit or single post\nconst url = $input.item.json.url;\nlet subreddit = null;\nlet postId = null;\nlet isSubreddit = false;\n\ntry {\n  const urlObj = new URL(url);\n  if (urlObj.hostname.includes('reddit.com')) {\n    const pathParts = urlObj.pathname.split('/').filter(p => p);\n    if (pathParts[0] === 'r' && pathParts[1]) {\n      subreddit = pathParts[1];\n      if (pathParts[2] === 'comments' && pathParts[3]) {\n        postId = pathParts[3];\n        isSubreddit = false;\n      } else {\n        isSubreddit = true;\n      }\n    }\n  }\n} catch (e) {\n  throw new Error('Invalid Reddit URL');\n}\n\nif (!subreddit) {\n  throw new Error('No subreddit found in URL');\n}\n\nreturn {\n  url: url,\n  subreddit: subreddit,\n  post_id: postId,\n  is_subreddit: isSubreddit\n};"
+      },
+      "name": "Extract Subreddit/Post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "type-check",
+              "leftValue": "={{$json.is_subreddit}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal",
+                "name": "n8n-nodes-base.equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Check Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "getSubreddit",
+        "name": "={{$json.subreddit}}",
+        "sort": "hot",
+        "options": {
+          "limit": 20,
+          "time": "all"
+        }
+      },
+      "name": "Fetch Top Posts",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "getPost",
+        "postId": "={{$json.post_id}}",
+        "options": {}
+      },
+      "name": "Fetch Single Post",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "getComments",
+        "postId": "={{$json.id}}",
+        "options": {
+          "limit": 50,
+          "sort": "best"
+        }
+      },
+      "name": "Fetch Comments",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "getComments",
+        "postId": "={{$json.id}}",
+        "options": {
+          "limit": 50,
+          "sort": "best"
+        }
+      },
+      "name": "Fetch Comments for Single",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition",
+        "options": {
+          "outputFormat": "multiline"
+        }
+      },
+      "name": "Merge Posts and Comments",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process Reddit posts and comments into structured format\nconst posts = $('Fetch Top Posts').all();\nconst comments = $('Fetch Comments').all();\nconst singleComments = $('Fetch Comments for Single').all();\nconst singlePost = $('Fetch Single Post').all();\n\nlet processedPosts = [];\nlet subreddit = $json.subreddit;\n\n// Process subreddit posts\nif (posts.length > 0) {\n  const commentsByPost = {};\n  \n  // Group comments by post\n  comments.forEach(comment => {\n    if (comment.json.data && comment.json.data.children) {\n      const postId = comment.json.kind === 't3' ? comment.json.data.children[0]?.data?.id : null;\n      if (postId) {\n        if (!commentsByPost[postId]) commentsByPost[postId] = [];\n        commentsByPost[postId].push(comment.json.data.children[0]?.data);\n      }\n    }\n  });\n\n  posts.forEach(post => {\n    const postData = post.json.data.children[0]?.data;\n    if (postData) {\n      processedPosts.push({\n        id: postData.id,\n        title: postData.title,\n        selftext: postData.selftext || '',\n        score: postData.score || 0,\n        num_comments: postData.num_comments || 0,\n        author: postData.author,\n        url: postData.url,\n        permalink: postData.permalink,\n        created_utc: postData.created_utc,\n        subreddit: subreddit,\n        comments: commentsByPost[postData.id] || [],\n        comments_text: (commentsByPost[postData.id] || []).map(c => `${c.author}: ${c.body}`).join('\\n\\n'),\n        full_text: `POST TITLE: ${postData.title}\\n\\nPOST CONTENT: ${postData.selftext || 'No self-text'}\\n\\nCOMMENTS:\\n${(commentsByPost[postData.id] || []).map(c => `${c.author}: ${c.body}`).join('\\n\\n')}`\n      });\n    }\n  });\n}\n\n// Process single post\nif (singlePost.length > 0) {\n  const postData = singlePost[0].json.data.children[0]?.data;\n  const singleCommentsData = singleComments.map(c => c.json.data.children[0]?.data).filter(Boolean);\n  \n  if (postData) {\n    processedPosts.push({\n      id: postData.id,\n      title: postData.title,\n      selftext: postData.selftext || '',\n      score: postData.score || 0,\n      num_comments: postData.num_comments || 0,\n      author: postData.author,\n      url: postData.url,\n      permalink: postData.permalink,\n      created_utc: postData.created_utc,\n      subreddit: subreddit,\n      comments: singleCommentsData,\n      comments_text: singleCommentsData.map(c => `${c.author}: ${c.body}`).join('\\n\\n'),\n      full_text: `POST TITLE: ${postData.title}\\n\\nPOST CONTENT: ${postData.selftext || 'No self-text'}\\n\\nCOMMENTS:\\n${singleCommentsData.map(c => `${c.author}: ${c.body}`).join('\\n\\n')}`\n    });\n  }\n}\n\n// Aggregate all content\nlet rawText = `REDDIT SUBREDDIT ANALYSIS\\nSubreddit: r/${subreddit}\\nGenerated at: ${new Date().toISOString()}\\nAnalysis Type: ${$json.is_subreddit ? 'Subreddit Overview' : 'Single Post'}\\n\\n`;\n\nprocessedPosts.forEach((post, index) => {\n  rawText += `=== POST ${index + 1} ===\\n`;\n  rawText += `Title: ${post.title}\\n`;\n  rawText += `Author: ${post.author}\\n`;\n  rawText += `Score: ${post.score}\\n`;\n  rawText += `Comments: ${post.num_comments}\\n`;\n  rawText += `URL: https://reddit.com${post.permalink}\\n\\n`;\n  rawText += `Content:\\n${post.selftext || 'No self-text'}\\n\\n`;\n  rawText += `Comments:\\n${post.comments_text || 'No comments'}\\n\\n`;\n  rawText += `---\\n\\n`;\n});\n\nreturn {\n  subreddit: subreddit,\n  is_subreddit: $json.is_subreddit,\n  raw_text: rawText,\n  post_count: processedPosts.length,\n  processed_posts: processedPosts\n};"
+      },
+      "name": "Process Posts and Comments",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=reddit_raw_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.txt",
+        "options": {}
+      },
+      "name": "Save Raw Text File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build AI analysis prompt for Reddit data from RFRNCS marketing agency perspective\nconst data = $input.item.json;\n\nconst prompt = `You are a senior marketing strategist at RFRNCS (https://www.rfrncs.in/), a premier branding and marketing agency specializing in comprehensive brand development, digital marketing, and business growth strategies.\n\nAnalyze this Reddit data to identify marketing opportunities, potential leads, emerging trends, and branding insights that RFRNCS can leverage or address for our clients.\n\nConvert qualitative discussions into quantitative marketing intelligence.\n\nReturn ONLY valid JSON with:\n{\n  \"summary\": \"Overview of key marketing themes and opportunities\",\n  \"potential_leads\": [{\"company_type\": \"Startup/SMB/Enterprise\", \"pain_points\": [\"issue1\"], \"service_fit\": \"Branding/Digital Marketing/Content\", \"urgency\": \"high/medium/low\"}],\n  \"market_trends\": [{\"trend\": \"description\", \"frequency\": 8, \"business_implication\": \"How RFRNCS can help or adapt\"}],\n  \"branding_opportunities\": [{\"opportunity\": \"Logo redesign/Social media strategy/etc\", \"target_audience\": \"description\", \"potential_value\": \"high/medium/low\"}],\n  \"compliance_risks\": [{\"risk\": \"GDPR/Advertising standards/etc\", \"frequency\": 3, \"recommendation\": \"How to address\"}],\n  \"competitive_insights\": [{\"competitor_type\": \"Direct/Indirect\", \"weakness\": \"description\", \"rfrncs_advantage\": \"How we can differentiate\"}],\n  \"quantitative_data\": [\n    {\"metric\": \"Lead Category\", \"value\": \"Branding Needs\", \"count\": 12},\n    {\"metric\": \"Trend Category\", \"value\": \"Social Media Marketing\", \"count\": 15}\n  ],\n  \"actionable_recommendations\": [\"Specific recommendation for RFRNCS business development\"],\n  \"confidence_score\": 0.88\n}\n\nRaw Reddit Data:\\n${data.raw_text}\\n\\nFocus on how RFRNCS can generate leads, stay ahead of trends, ensure compliance, and provide superior branding solutions.`;\n\nreturn {\n  ...data,\n  ai_prompt: prompt\n};"
+      },
+      "name": "Build AI Analysis Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$env.GEMINI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\"contents\":[{\"parts\":[{\"text\":{{$json.ai_prompt}}}]}]}",
+        "options": {}
+      },
+      "name": "Gemini Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Gemini response and create CSV + explanation\nconst response = $input.item.json;\nconst data = $input.item.json;\n\nlet analysis = {\n  summary: \"Analysis failed\",\n  potential_leads: [],\n  market_trends: [],\n  branding_opportunities: [],\n  compliance_risks: [],\n  competitive_insights: [],\n  quantitative_data: [],\n  actionable_recommendations: [],\n  confidence_score: 0\n};\n\ntry {\n  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  const cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  analysis = JSON.parse(cleanText);\n} catch (e) {\n  console.error('Gemini parse error:', e);\n}\n\n// Create CSV from quantitative data\nlet csvContent = 'Metric,Value,Count\\n';\nanalysis.quantitative_data.forEach(item => {\n  csvContent += `${item.metric.replace(/,/g, ';')},${item.value.replace(/,/g, ';')},${item.count}\\n`;\n});\n\n// Create explanation text\nconst explanation = `RFRNCS MARKETING INTELLIGENCE REPORT\\n\\nSubreddit: r/${data.subreddit}\\nAnalysis Date: ${new Date().toISOString()}\\nAnalysis Type: ${data.is_subreddit ? 'Subreddit Overview (20 posts)' : 'Single Post Analysis'}\\n\\nSUMMARY:\\n${analysis.summary}\\n\\nPOTENTIAL LEADS:\\n${analysis.potential_leads.map(l => `- ${l.company_type}: ${l.pain_points.join(', ')} (${l.service_fit}) - Urgency: ${l.urgency}`).join('\\n')}\\n\\nMARKET TRENDS:\\n${analysis.market_trends.map(t => `- ${t.trend} (freq: ${t.frequency}) - ${t.business_implication}`).join('\\n')}\\n\\nBRANDING OPPORTUNITIES:\\n${analysis.branding_opportunities.map(o => `- ${o.opportunity} for ${o.target_audience} (value: ${o.potential_value})`).join('\\n')}\\n\\nCOMPLIANCE RISKS:\\n${analysis.compliance_risks.map(r => `- ${r.risk} (freq: ${r.frequency}) - ${r.recommendation}`).join('\\n')}\\n\\nCOMPETITIVE INSIGHTS:\\n${analysis.competitive_insights.map(c => `- ${c.competitor_type}: ${c.weakness} - RFRNCS advantage: ${c.rfrncs_advantage}`).join('\\n')}\\n\\nACTIONABLE RECOMMENDATIONS:\\n${analysis.actionable_recommendations.map(r => `- ${r}`).join('\\n')}\\n\\nCONFIDENCE SCORE: ${analysis.confidence_score}\\n`;\n\nreturn {\n  subreddit: data.subreddit,\n  is_subreddit: data.is_subreddit,\n  csv_data: csvContent,\n  explanation_text: explanation,\n  analysis: analysis,\n  post_count: data.post_count\n};"
+      },
+      "name": "Create CSV and Explanation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2450, 300]
+    },
+    {
+      "parameters": {
+        "mode": "csv",
+        "fileName": "=reddit_analysis_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
+        "options": {}
+      },
+      "name": "Convert to CSV File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2650, 200]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=reddit_explanation_{{$json.subreddit}}_{{$now.format('YYYY-MM-DD_HHmmss')}}.txt",
+        "options": {}
+      },
+      "name": "Convert to Text File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2650, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@gmail.com",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Marketing Intelligence: r/{{$json.subreddit}} Analysis ({{$now.format('MMM DD, HH:mm')}})",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h2 style=\"color: #2563eb;\">🎯 RFRNCS Marketing Intelligence Report</h2>\n  \n  <div style=\"background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0;\">📊 Analysis Summary</h3>\n    <p><strong>Subreddit:</strong> r/{{$json.subreddit}}</p>\n    <p><strong>Analysis Type:</strong> {{$json.is_subreddit ? 'Subreddit Overview (20 posts)' : 'Single Post Analysis'}}</p>\n    <p><strong>Posts Analyzed:</strong> {{$json.post_count}}</p>\n    <p><strong>Potential Leads Identified:</strong> {{$json.analysis.potential_leads.length}}</p>\n    <p><strong>Market Trends Detected:</strong> {{$json.analysis.market_trends.length}}</p>\n    <p><strong>Confidence Score:</strong> {{$json.analysis.confidence_score}}</p>\n  </div>\n  \n  <p>📎 <strong>Attachments:</strong></p>\n  <ul>\n    <li>CSV file with quantitative marketing data</li>\n    <li>Text file with detailed business insights and recommendations</li>\n  </ul>\n  \n  <p style=\"color: #6b7280; font-size: 12px;\">Generated at {{$now.format('YYYY-MM-DD HH:mm:ss')}} | RFRNCS AI-Powered Market Research</p>\n</div>",
+        "attachments": "={{$node['Convert to CSV File'].binary.data}},{{$node['Convert to Text File'].binary.data}}",
+        "options": {}
+      },
+      "name": "Email Results",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [ [ { "node": "Extract URL", "type": "main", "index": 0 } ] ] },
+    "Extract URL": { "main": [ [ { "node": "Extract Subreddit/Post", "type": "main", "index": 0 } ] ] },
+    "Extract Subreddit/Post": { "main": [ [ { "node": "Check Type", "type": "main", "index": 0 } ] ] },
+    "Check Type": { "main": [ [ { "node": "Fetch Top Posts", "type": "main", "index": 0 } ], [ { "node": "Fetch Single Post", "type": "main", "index": 0 } ] ] },
+    "Fetch Top Posts": { "main": [ [ { "node": "Fetch Comments", "type": "main", "index": 0 } ] ] },
+    "Fetch Single Post": { "main": [ [ { "node": "Fetch Comments for Single", "type": "main", "index": 0 } ] ] },
+    "Fetch Comments": { "main": [ [ { "node": "Merge Posts and Comments", "type": "main", "index": 0 } ] ] },
+    "Fetch Comments for Single": { "main": [ [ { "node": "Merge Posts and Comments", "type": "main", "index": 1 } ] ] },
+    "Merge Posts and Comments": { "main": [ [ { "node": "Process Posts and Comments", "type": "main", "index": 0 } ] ] },
+    "Process Posts and Comments": { "main": [ [ { "node": "Save Raw Text File", "type": "main", "index": 0 } ] ] },
+    "Save Raw Text File": { "main": [ [ { "node": "Build AI Analysis Prompt", "type": "main", "index": 0 } ] ] },
+    "Build AI Analysis Prompt": { "main": [ [ { "node": "Gemini Analysis", "type": "main", "index": 0 } ] ] },
+    "Gemini Analysis": { "main": [ [ { "node": "Create CSV and Explanation", "type": "main", "index": 0 } ] ] },
+    "Create CSV and Explanation": { "main": [ [ { "node": "Convert to CSV File", "type": "main", "index": 0 }, { "node": "Convert to Text File", "type": "main", "index": 0 } ] ] },
+    "Convert to CSV File": { "main": [ [ { "node": "Email Results", "type": "main", "index": 0 } ] ] },
+    "Convert to Text File": { "main": [ [ { "node": "Email Results", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {}
+}
+</content>
+<parameter name="line_count">171

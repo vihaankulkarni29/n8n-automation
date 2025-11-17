@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Leaders In Tech",
+    "batch": "Summer 2015",
+    "industry": "Unspecified",
+    "location": "Leaders In Tech San Francisco, CA",
+    "website": "",
+    "description": "Helping founders improve themselves, their companies, and the world.",
+    "logo": "",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/leaders-in-tech",
+    "score": 11,
+    "website_present": false,
+    "description_length": 68
+  },
+  {
+    "name": "Quantierra",
+    "batch": "Winter 2015",
+    "industry": "Real Estate and Construction, Housing and Real Estate",
+    "location": "Quantierra New York, NY",
+    "website": "",
+    "description": "Sourcing investment real estate",
+    "logo": "",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/quantierra",
+    "score": 11,
+    "website_present": false,
+    "description_length": 31
+  },
+  {
+    "name": "MetricWire",
+    "batch": "Summer 2014",
+    "industry": "Healthcare, Healthcare IT",
+    "location": "MetricWire",
+    "website": "",
+    "description": "Mobile surveys for researchers",
+    "logo": "",
+    "video": "",
+    "detail_url": "https://www.ycombinator.com/companies/metricwire",
+    "score": 11,
+    "website_present": false,
+    "description_length": 30
+  }
+]

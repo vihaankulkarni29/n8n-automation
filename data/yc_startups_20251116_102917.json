@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Summer 2013",
+    "batch": "",
+    "industry": "CasetextSan Francisco, CA, USA",
+    "location": "",
+    "website": "",
+    "description": "",
+    "logo": "",
+    "video": "",
+    "score": 9,
+    "website_present": false,
+    "description_length": 0
+  },
+  {
+    "name": "Summer 2015",
+    "batch": "",
+    "industry": "Leaders In TechSan Francisco, CA, USA",
+    "location": "",
+    "website": "",
+    "description": "",
+    "logo": "",
+    "video": "",
+    "score": 9,
+    "website_present": false,
+    "description_length": 0
+  },
+  {
+    "name": "Winter 2015",
+    "batch": "",
+    "industry": "QuantierraNew York, NY, USA",
+    "location": "Real Estate",
+    "website": "",
+    "description": "",
+    "logo": "",
+    "video": "",
+    "score": 9,
+    "website_present": false,
+    "description_length": 0
+  },
+  {
+    "name": "Summer 2014",
+    "batch": "",
+    "industry": "MetricWireKitchener, ON, Canada",
+    "location": "Healthcare IT",
+    "website": "",
+    "description": "",
+    "logo": "",
+    "video": "",
+    "score": 9,
+    "website_present": false,
+    "description_length": 0
+  },
+  {
+    "name": "Summer 2014",
+    "batch": "",
+    "industry": "BillforwardSan Francisco, CA, USA",
+    "location": "",
+    "website": "",
+    "description": "",
+    "logo": "",
+    "video": "",
+    "score": 9,
+    "website_present": false,
+    "description_length": 0
+  }
+]

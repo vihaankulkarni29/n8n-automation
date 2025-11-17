@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Casetext",
+    "batch": "Summer 2013",
+    "industry": "B2B, Legal",
+    "location": "Casetext San Francisco, CA",
+    "website": "",
+    "description": "We make the world's laws free and understandable.",
+    "logo": "",
+    "video": "",
+    "detail_url": "",
+    "score": 11,
+    "website_present": false,
+    "description_length": 49
+  },
+  {
+    "name": "Leaders In Tech",
+    "batch": "Summer 2015",
+    "industry": "Unspecified",
+    "location": "Leaders In Tech San Francisco, CA",
+    "website": "",
+    "description": "Helping founders improve themselves, their companies, and the world.",
+    "logo": "",
+    "video": "",
+    "detail_url": "",
+    "score": 11,
+    "website_present": false,
+    "description_length": 68
+  },
+  {
+    "name": "Quantierra",
+    "batch": "Winter 2015",
+    "industry": "Real Estate and Construction, Housing and Real Estate",
+    "location": "Quantierra New York, NY",
+    "website": "",
+    "description": "Sourcing investment real estate",
+    "logo": "",
+    "video": "",
+    "detail_url": "",
+    "score": 11,
+    "website_present": false,
+    "description_length": 31
+  }
+]
