@@ -1,5 +1,5 @@
 {
-  "name": "Simple RFRNCS Lead Analyzer",
+  "name": "Simple RFRNCS Lead Analyzer (Function CSV)",
   "nodes": [
     {
       "parameters": {},
@@ -10,13 +10,10 @@
     },
     {
       "parameters": {
-        "fileSelector": "={{ $binary.data }}",
-        "options": {
-          "sheetName": "Sheet1"
-        }
+        "functionCode": "// Parse CSV data from binary input\nconst csvData = $binary.data.data;\nconst csvString = Buffer.from(csvData, 'base64').toString('utf-8');\n\nconst lines = csvString.split('\\n').filter(line => line.trim());\nconst headers = lines[0].split(',').map(h => h.replace(/\\\"/g, '').trim());\n\nconst results = [];\nfor (let i = 1; i < lines.length; i++) {\n  const values = lines[i].split(',').map(v => v.replace(/\\\"/g, '').trim());\n  const row = {};\n  headers.forEach((header, index) => {\n    row[header] = values[index] || '';\n  });\n  results.push(row);\n}\n\nreturn results;"
       },
-      "name": "Read Spreadsheet File",
-      "type": "n8n-nodes-base.spreadsheetFile",
+      "name": "Parse CSV Function",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [450, 300]
     },
@@ -88,41 +85,51 @@
     },
     {
       "parameters": {
-        "mode": "csv",
-        "fileName": "=rfrncs_lead_analysis_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
-        "options": {}
+        "functionCode": "// Create CSV content from analysis results\nconst analyses = $input.all();\n\nlet csvContent = 'Company Name,Website,Company Overview,Products Services,Target Market,Business Model,Industry,Key Features,Competitive Advantage,Fit Score,Needs Branding Services,Recommended Services,Budget Potential,Urgency Level,Conversion Probability,Reasoning,Next Steps\\n';\n\nanalyses.forEach(analysis => {\n  const row = [\n    `\"${(analysis.company_name || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.website || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.company_overview || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.products_services || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.target_market || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.business_model || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.industry || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.key_features || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.competitive_advantage || '').replace(/\"/g, '\"\"')}\"`,\n    analysis.fit_score || 0,\n    analysis.needs_branding_services || false,\n    `\"${(analysis.recommended_services || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.budget_potential || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.urgency_level || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.conversion_probability || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.reasoning || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.next_steps || '').replace(/\"/g, '\"\"')}\"`\n  ];\n  csvContent += row.join(',') + '\\n';\n});\n\nreturn {\n  csv_content: csvContent,\n  total_leads: analyses.length,\n  generated_at: new Date().toISOString()\n};"
       },
-      "name": "Generate CSV Report",
-      "type": "n8n-nodes-base.convertToFile",
+      "name": "Generate CSV Function",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [1850, 300]
     },
     {
       "parameters": {
+        "mode": "text",
+        "fileName": "=rfrncs_lead_analysis_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
+        "options": {}
+      },
+      "name": "Create CSV File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
         "fromEmail": "vihaankulkarni29@gmail.com",
         "toEmail": "vihaankulkarni29@gmail.com",
-        "subject": "=RFRNCS Lead Analysis Complete - {{$json.length}} Leads Processed",
+        "subject": "=RFRNCS Lead Analysis Complete - {{$json.total_leads}} Leads Processed",
         "emailType": "text",
-        "message": "=RFRNCS Lead Analysis Report\n\nAnalysis completed for {{$json.length}} leads.\n\nThe attached CSV contains detailed company analysis and RFRNCS fit assessment for each lead.\n\nGenerated: {{$now.format('YYYY-MM-DD HH:mm:ss')}}\n\nRFRNCS AI Lead Analyzer",
-        "attachments": "={{$node['Generate CSV Report'].binary.data}}",
+        "message": "=RFRNCS Lead Analysis Report\n\nAnalysis completed for {{$json.total_leads}} leads.\n\nThe attached CSV contains detailed company analysis and RFRNCS fit assessment for each lead.\n\nGenerated: {{$json.generated_at}}\n\nRFRNCS AI Lead Analyzer",
+        "attachments": "={{$node['Create CSV File'].binary.data}}",
         "options": {}
       },
       "name": "Email Results",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
-      "position": [2050, 300]
+      "position": [2250, 300]
     }
   ],
   "connections": {
-    "Manual Trigger": { "main": [ [ { "node": "Read CSV File", "type": "main", "index": 0 } ] ] },
-    "Read CSV File": { "main": [ [ { "node": "Loop Over Leads", "type": "main", "index": 0 } ] ] },
+    "Manual Trigger": { "main": [ [ { "node": "Parse CSV Function", "type": "main", "index": 0 } ] ] },
+    "Parse CSV Function": { "main": [ [ { "node": "Loop Over Leads", "type": "main", "index": 0 } ] ] },
     "Loop Over Leads": { "main": [ [ { "node": "Prepare Lead Data", "type": "main", "index": 0 } ] ] },
     "Prepare Lead Data": { "main": [ [ { "node": "Company Analysis Agent", "type": "main", "index": 0 } ] ] },
     "Company Analysis Agent": { "main": [ [ { "node": "RFRNCS Fit Analysis Agent", "type": "main", "index": 0 } ] ] },
     "RFRNCS Fit Analysis Agent": { "main": [ [ { "node": "Format Final Results", "type": "main", "index": 0 } ] ] },
     "Format Final Results": { "main": [ [ { "node": "Collect All Results", "type": "main", "index": 0 } ] ] },
-    "Collect All Results": { "main": [ [ { "node": "Generate CSV Report", "type": "main", "index": 0 } ] ] },
-    "Generate CSV Report": { "main": [ [ { "node": "Email Results", "type": "main", "index": 0 } ] ] }
+    "Collect All Results": { "main": [ [ { "node": "Generate CSV Function", "type": "main", "index": 0 } ] ] },
+    "Generate CSV Function": { "main": [ [ { "node": "Create CSV File", "type": "main", "index": 0 } ] ] },
+    "Create CSV File": { "main": [ [ { "node": "Email Results", "type": "main", "index": 0 } ] ] }
   },
   "settings": {}
 }

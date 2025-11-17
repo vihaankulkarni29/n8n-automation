@@ -21,6 +21,8 @@ name,website,description
 "Tech Startup Inc","https://techstartup.com","SaaS platform for small businesses"
 ```
 
+**Important**: Save your CSV file and upload it when prompted by the workflow.
+
 ## 🛠️ **Setup Steps**
 
 ### **1. Import Workflow**
