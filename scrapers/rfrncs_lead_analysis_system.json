@@ -1,0 +1,321 @@
+{
+  "name": "RFRNCS Lead Analysis System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-lead-analysis",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rfrncs-lead-analysis"
+    },
+    {
+      "parameters": {
+        "options": {
+          "fileName": "leads.csv"
+        }
+      },
+      "name": "Read CSV File",
+      "type": "n8n-nodes-base.readCSV",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "mode": "multiplex",
+        "options": {}
+      },
+      "name": "Loop Over Leads",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract lead information and prepare for analysis\nconst lead = $json;\n\n// Extract website or Instagram URL\nlet websiteUrl = '';\nlet instagramHandle = '';\n\nif (lead.website) {\n  websiteUrl = lead.website;\n} else if (lead.instagram) {\n  instagramHandle = lead.instagram;\n} else if (lead.social_media) {\n  const socialUrl = lead.social_media;\n  if (socialUrl.includes('instagram.com')) {\n    instagramHandle = socialUrl.split('/').pop();\n  } else {\n    websiteUrl = socialUrl;\n  }\n}\n\n// Clean and normalize URLs\nif (websiteUrl && !websiteUrl.startsWith('http')) {\n  websiteUrl = 'https://' + websiteUrl;\n}\n\nreturn {\n  lead_name: lead.name || lead.company || lead.brand || 'Unknown',\n  email: lead.email || '',\n  website_url: websiteUrl,\n  instagram_handle: instagramHandle,\n  original_data: lead,\n  analysis_url: websiteUrl || `https://instagram.com/${instagramHandle}`,\n  analysis_type: websiteUrl ? 'website' : 'instagram'\n};"
+      },
+      "name": "Prepare Lead Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-website",
+              "leftValue": "={{$json.website_url}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty",
+                "name": "n8n-nodes-base.isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Check URL Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.firecrawl.dev/v0/scrape",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.FIRECRAWL_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\n  \"url\": \"{{$json.website_url}}\",\n  \"pageOptions\": {\n    \"onlyMainContent\": true,\n    \"replaceAllPathsWithAbsolutePaths\": true,\n    \"removeTags\": \"img,svg,video,audio\"\n  },\n  \"formats\": [\"markdown\"]\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "name": "Scrape Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.firecrawl.dev/v0/scrape",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.FIRECRAWL_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\n  \"url\": \"https://instagram.com/{{$json.instagram_handle}}\",\n  \"pageOptions\": {\n    \"onlyMainContent\": true,\n    \"removeTags\": \"img,svg,video,audio\"\n  },\n  \"formats\": [\"markdown\"]\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "name": "Scrape Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process scraped content and extract brand information\nconst leadData = $json;\nconst websiteContent = $('Scrape Website').first().json;\nconst instagramContent = $('Scrape Instagram').first().json;\n\n// Get the content from whichever source worked\nlet content = '';\nif (websiteContent && websiteContent.data && websiteContent.data.markdown) {\n  content = websiteContent.data.markdown;\n} else if (instagramContent && instagramContent.data && instagramContent.data.markdown) {\n  content = instagramContent.data.markdown;\n}\n\n// If both failed, create placeholder content\nif (!content) {\n  content = `Website or Instagram profile for ${leadData.lead_name}. Content could not be retrieved automatically.`;\n}\n\nreturn {\n  ...leadData,\n  content: content,\n  content_length: content.length\n};"
+      },
+      "name": "Process Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$env.GEMINI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\"contents\":[{\"parts\":[{\"text\": \"You are a brand analyst. Analyze this company's website/content and provide insights about their brand identity.\\n\\nReturn ONLY valid JSON with this exact structure:\\n{\\n  \\\"brand_summary\\\": \\\"One sentence describing what this company/business does and what their brand feels like\\\",\\n  \\\"visual_identity\\\": \\\"Description of their visual style, colors, design approach\\\",\\n  \\\"brand_personality\\\": \\\"What personality traits their brand conveys (professional, playful, innovative, etc.)\\\",\\n  \\\"target_audience\\\": \\\"Who seems to be their target market\\\",\\n  \\\"messaging_tone\\\": \\\"How they communicate (formal, casual, technical, emotional)\\\",\\n  \\\"brand_strengths\\\": [\\\"strength1\\\", \\\"strength2\\\", \\\"strength3\\\"],\\n  \\\"brand_weaknesses\\\": [\\\"weakness1\\\", \\\"weakness2\\\"],\\n  \\\"confidence_score\\\": 0.85\\n}\\n\\nCompany: {{$json.lead_name}}\\nContent to analyze:\\n{{$json.content.substring(0, 2000)}}\"}]}]}",
+        "options": {}
+      },
+      "name": "Brand Identity Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse brand analysis and prepare RFRNCS opportunity analysis\nconst brandAnalysis = $input.item.json;\nconst leadData = $input.item.json;\n\nlet analysis = {\n  brand_summary: \"Analysis failed\",\n  visual_identity: \"\",\n  brand_personality: \"\",\n  target_audience: \"\",\n  messaging_tone: \"\",\n  brand_strengths: [],\n  brand_weaknesses: [],\n  confidence_score: 0\n};\n\ntry {\n  const text = brandAnalysis.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  const cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  analysis = JSON.parse(cleanText);\n} catch (e) {\n  console.error('Brand analysis parse error:', e);\n}\n\nreturn {\n  ...leadData,\n  brand_analysis: analysis,\n  rfrncs_opportunity_prompt: `Analyze how RFRNCS (https://www.rfrncs.in/) can help this company with branding and marketing services.\\n\\nCompany: ${leadData.lead_name}\\nBrand Analysis Results:\\n- What they do: ${analysis.brand_summary}\\n- Visual Identity: ${analysis.visual_identity}\\n- Personality: ${analysis.brand_personality}\\n- Target Audience: ${analysis.target_audience}\\n- Messaging Tone: ${analysis.messaging_tone}\\n- Strengths: ${analysis.brand_strengths.join(', ')}\\n- Weaknesses: ${analysis.brand_weaknesses.join(', ')}\\n\\nWebsite/Content: ${leadData.content.substring(0, 1000)}`\n};"
+      },
+      "name": "Prepare RFRNCS Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$env.GEMINI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\"contents\":[{\"parts\":[{\"text\": \"You are a senior marketing strategist at RFRNCS (https://www.rfrncs.in/), a premier branding and marketing agency. Analyze how we can help this company with our services.\\n\\nReturn ONLY valid JSON with this exact structure:\\n{\\n  \\\"rfrncs_opportunity\\\": \\\"How RFRNCS can specifically help this company\\\",\\n  \\\"recommended_services\\\": [\\\"service1\\\", \\\"service2\\\", \\\"service3\\\"],\\n  \\\"priority_level\\\": \\\"high/medium/low\\\",\\n  \\\"investment_potential\\\": \\\"estimated_budget_range\\\",\\n  \\\"competitive_advantage\\\": \\\"What makes this a good client for RFRNCS\\\",\\n  \\\"immediate_actions\\\": [\\\"action1\\\", \\\"action2\\\"],\\n  \\\"pain_points_identified\\\": [\\\"pain1\\\", \\\"pain2\\\"],\\n  \\\"success_probability\\\": 0.75,\\n  \\\"approach_recommendation\\\": \\\"How to approach this potential client\\\"\\n}\\n\\n{{$json.rfrncs_opportunity_prompt}}\"}]}]}",
+        "options": {}
+      },
+      "name": "RFRNCS Opportunity Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse RFRNCS opportunity analysis and create final result\nconst opportunityAnalysis = $input.item.json;\nconst leadData = $input.item.json;\n\nlet rfrncsAnalysis = {\n  rfrncs_opportunity: \"Analysis failed\",\n  recommended_services: [],\n  priority_level: \"medium\",\n  investment_potential: \"unknown\",\n  competitive_advantage: \"\",\n  immediate_actions: [],\n  pain_points_identified: [],\n  success_probability: 0.5,\n  approach_recommendation: \"\"\n};\n\ntry {\n  const text = opportunityAnalysis.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  const cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  rfrncsAnalysis = JSON.parse(cleanText);\n} catch (e) {\n  console.error('RFRNCS analysis parse error:', e);\n}\n\n// Create final lead analysis result\nreturn {\n  lead_name: leadData.lead_name,\n  email: leadData.email,\n  website_url: leadData.website_url,\n  instagram_handle: leadData.instagram_handle,\n  analysis_type: leadData.analysis_type,\n  \n  // Brand Analysis Results\n  brand_summary: leadData.brand_analysis.brand_summary,\n  visual_identity: leadData.brand_analysis.visual_identity,\n  brand_personality: leadData.brand_analysis.brand_personality,\n  target_audience: leadData.brand_analysis.target_audience,\n  messaging_tone: leadData.brand_analysis.messaging_tone,\n  brand_strengths: leadData.brand_analysis.brand_strengths.join(', '),\n  brand_weaknesses: leadData.brand_analysis.brand_weaknesses.join(', '),\n  brand_confidence: leadData.brand_analysis.confidence_score,\n  \n  // RFRNCS Opportunity\n  rfrncs_opportunity: rfrncsAnalysis.rfrncs_opportunity,\n  recommended_services: rfrncsAnalysis.recommended_services.join(', '),\n  priority_level: rfrncsAnalysis.priority_level,\n  investment_potential: rfrncsAnalysis.investment_potential,\n  competitive_advantage: rfrncsAnalysis.competitive_advantage,\n  immediate_actions: rfrncsAnalysis.immediate_actions.join('; '),\n  pain_points_identified: rfrncsAnalysis.pain_points_identified.join(', '),\n  success_probability: rfrncsAnalysis.success_probability,\n  approach_recommendation: rfrncsAnalysis.approach_recommendation,\n  \n  // Processing Info\n  analysis_completed: new Date().toISOString(),\n  content_length: leadData.content_length\n};"
+      },
+      "name": "Final Lead Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2250, 300]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition",
+        "options": {
+          "outputFormat": "multiline"
+        }
+      },
+      "name": "Collect All Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [2450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-results",
+              "leftValue": "={{$json.length}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "larger",
+                "name": "n8n-nodes-base.larger"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Check for Results",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create comprehensive analysis report\nconst analyses = $json;\n\n// Create CSV content\nlet csvContent = 'Lead Name,Email,Website,Instagram,Analysis Type,Brand Summary,Visual Identity,Brand Personality,Target Audience,Messaging Tone,Brand Strengths,Brand Weaknesses,RFRNCS Opportunity,Recommended Services,Priority Level,Investment Potential,Competitive Advantage,Immediate Actions,Pain Points,Success Probability,Approach Recommendation\\n';\n\nanalyses.forEach(analysis => {\n  const row = [\n    `\"${(analysis.lead_name || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.email || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.website_url || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.instagram_handle || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.analysis_type || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.brand_summary || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.visual_identity || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.brand_personality || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.target_audience || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.messaging_tone || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.brand_strengths || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.brand_weaknesses || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.rfrncs_opportunity || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.recommended_services || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.priority_level || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.investment_potential || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.competitive_advantage || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.immediate_actions || '').replace(/\"/g, '\"\"')}\"`,\n    `\"${(analysis.pain_points_identified || '').replace(/\"/g, '\"\"')}\"`,\n    analysis.success_probability || 0,\n    `\"${(analysis.approach_recommendation || '').replace(/\"/g, '\"\"')}\"`\n  ];\n  csvContent += row.join(',') + '\\n';\n});\n\n// Create detailed report\nconst report = `RFRNCS LEAD ANALYSIS REPORT\\n`;\nreport += `========================================\\n\\n`;\nreport += `Generated: ${new Date().toISOString()}\\n`;\nreport += `Total Leads Analyzed: ${analyses.length}\\n\\n`;\n\n// Summary statistics\nconst highPriority = analyses.filter(a => a.priority_level === 'high').length;\nconst mediumPriority = analyses.filter(a => a.priority_level === 'medium').length;\nconst lowPriority = analyses.filter(a => a.priority_level === 'low').length;\n\nreport += `PRIORITY BREAKDOWN\\n`;\nreport += `${'='.repeat(18)}\\n`;\nreport += `High Priority: ${highPriority} leads\\n`;\nreport += `Medium Priority: ${mediumPriority} leads\\n`;\nreport += `Low Priority: ${lowPriority} leads\\n\\n`;\n\n// Detailed analysis\nreport += `DETAILED LEAD ANALYSIS\\n`;\nreport += `${'='.repeat(23)}\\n\\n`;\n\nanalyses.forEach((lead, i) => {\n  report += `${i + 1}. ${lead.lead_name}\\n`;\n  report += `   Priority: ${lead.priority_level.toUpperCase()}\\n`;\n  report += `   Contact: ${lead.email || 'No email'}\\n`;\n  report += `   Website: ${lead.website_url || 'None'}\\n`;\n  report += `   Instagram: ${lead.instagram_handle || 'None'}\\n\\n`;\n  \n  report += `   BRAND ANALYSIS:\\n`;\n  report += `   • What they do: ${lead.brand_summary}\\n`;\n  report += `   • Visual identity: ${lead.visual_identity}\\n`;\n  report += `   • Personality: ${lead.brand_personality}\\n`;\n  report += `   • Target audience: ${lead.target_audience}\\n`;\n  report += `   • Strengths: ${lead.brand_strengths}\\n`;\n  report += `   • Weaknesses: ${lead.brand_weaknesses}\\n\\n`;\n  \n  report += `   RFRNCS OPPORTUNITY:\\n`;\n  report += `   • How we can help: ${lead.rfrncs_opportunity}\\n`;\n  report += `   • Recommended services: ${lead.recommended_services}\\n`;\n  report += `   • Investment potential: ${lead.investment_potential}\\n`;\n  report += `   • Approach: ${lead.approach_recommendation}\\n`;\n  report += `   • Success probability: ${Math.round(lead.success_probability * 100)}%\\n\\n`;\n  \n  report += `   IMMEDIATE ACTIONS:\\n`;\n  report += `   ${lead.immediate_actions.replace(/; /g, '\\n   • ')}\\n\\n`;\n  report += `${'-'.repeat(60)}\\n\\n`;\n});\n\nreturn {\n  total_leads: analyses.length,\n  high_priority_leads: highPriority,\n  csv_content: csvContent,\n  detailed_report: report,\n  analysis_date: new Date().toISOString()\n};"
+      },
+      "name": "Generate Final Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2850, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create no-op for no results case\nreturn {\n  message: \"No leads found to analyze\",\n  total_leads: 0,\n  csv_content: \"No data\",\n  detailed_report: \"No leads were provided for analysis.\",\n  analysis_date: new Date().toISOString()\n};"
+      },
+      "name": "No Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2850, 400]
+    },
+    {
+      "parameters": {
+        "mode": "csv",
+        "fileName": "=rfrncs_lead_analysis_{{$now.format('YYYY-MM-DD_HHmmss')}}.csv",
+        "options": {}
+      },
+      "name": "Save CSV Report",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [3050, 200]
+    },
+    {
+      "parameters": {
+        "mode": "text",
+        "fileName": "=rfrncs_lead_analysis_report_{{$now.format('YYYY-MM-DD_HHmmss')}}.txt",
+        "options": {}
+      },
+      "name": "Save Detailed Report",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [3050, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "vihaankulkarni29@gmail.com",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Lead Analysis Complete: {{$json.total_leads}} Leads Analyzed",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h2 style=\"color: #2563eb;\">🎯 RFRNCS Lead Analysis Complete</h2>\n  \n  <div style=\"background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0;\">📊 Analysis Summary</h3>\n    <p><strong>Total Leads Analyzed:</strong> {{$json.total_leads}}</p>\n    <p><strong>High Priority Leads:</strong> {{$json.high_priority_leads}}</p>\n    <p><strong>Analysis Date:</strong> {{$json.analysis_date}}</p>\n  </div>\n  \n  <div style=\"background: #dcfce7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n    <h3 style=\"margin-top: 0; color: #166534;\">💼 Key Insights</h3>\n    <p>Each lead has been analyzed for:</p>\n    <ul>\n      <li><strong>Brand Identity:</strong> Visual style, personality, target audience</li>\n      <li><strong>RFRNCS Opportunities:</strong> How we can help each prospect</li>\n      <li><strong>Priority Scoring:</strong> High/Medium/Low priority classification</li>\n      <li><strong>Actionable Insights:</strong> Immediate next steps for outreach</li>\n    </ul>\n  </div>\n  \n  <p>📎 <strong>Attachments:</strong></p>\n  <ul>\n    <li><strong>CSV Report:</strong> Structured data for CRM import</li>\n    <li><strong>Detailed Report:</strong> Complete analysis with insights</li>\n  </ul>\n  \n  <p style=\"color: #6b7280; font-size: 12px;\">Generated: {{$now.format('YYYY-MM-DD HH:mm:ss')}} | RFRNCS AI Lead Analysis System</p>\n</div>",
+        "attachments": "={{$node['Save CSV Report'].binary.data}},{{$node['Save Detailed Report'].binary.data}}",
+        "options": {}
+      },
+      "name": "Email Analysis Results",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [3250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [ [ { "node": "Read CSV File", "type": "main", "index": 0 } ] ] },
+    "Read CSV File": { "main": [ [ { "node": "Loop Over Leads", "type": "main", "index": 0 } ] ] },
+    "Loop Over Leads": { "main": [ [ { "node": "Prepare Lead Data", "type": "main", "index": 0 } ] ] },
+    "Prepare Lead Data": { "main": [ [ { "node": "Check URL Type", "type": "main", "index": 0 } ] ] },
+    "Check URL Type": { "main": [ [ { "node": "Scrape Website", "type": "main", "index": 0 } ], [ { "node": "Scrape Instagram", "type": "main", "index": 0 } ] ] },
+    "Scrape Website": { "main": [ [ { "node": "Process Content", "type": "main", "index": 0 } ] ] },
+    "Scrape Instagram": { "main": [ [ { "node": "Process Content", "type": "main", "index": 1 } ] ] },
+    "Process Content": { "main": [ [ { "node": "Brand Identity Analysis", "type": "main", "index": 0 } ] ] },
+    "Brand Identity Analysis": { "main": [ [ { "node": "Prepare RFRNCS Analysis", "type": "main", "index": 0 } ] ] },
+    "Prepare RFRNCS Analysis": { "main": [ [ { "node": "RFRNCS Opportunity Analysis", "type": "main", "index": 0 } ] ] },
+    "RFRNCS Opportunity Analysis": { "main": [ [ { "node": "Final Lead Analysis", "type": "main", "index": 0 } ] ] },
+    "Final Lead Analysis": { "main": [ [ { "node": "Collect All Results", "type": "main", "index": 0 } ] ] },
+    "Collect All Results": { "main": [ [ { "node": "Check for Results", "type": "main", "index": 0 } ] ] },
+    "Check for Results": { "main": [ [ { "node": "Generate Final Report", "type": "main", "index": 0 } ], [ { "node": "No Results", "type": "main", "index": 0 } ] ] },
+    "Generate Final Report": { "main": [ [ { "node": "Save CSV Report", "type": "main", "index": 0 }, { "node": "Save Detailed Report", "type": "main", "index": 0 } ] ] },
+    "No Results": { "main": [ [ { "node": "Email Analysis Results", "type": "main", "index": 0 } ] ] },
+    "Save CSV Report": { "main": [ [ { "node": "Email Analysis Results", "type": "main", "index": 0 } ] ] },
+    "Save Detailed Report": { "main": [ [ { "node": "Email Analysis Results", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {}
+}
