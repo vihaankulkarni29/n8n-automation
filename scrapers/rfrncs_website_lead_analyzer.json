@@ -1,0 +1,495 @@
+{
+  "meta": {
+    "instanceId": "408f9fb9940c3cb18ffdef0e0150fe342d6e655c3a9fac21f0f644e8bedabcd9",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "RFRNCS Website Lead Analyzer",
+  "nodes": [
+    {
+      "id": "a9048293-787d-44d6-b995-d329b2495048",
+      "name": "Manual Trigger - Analyze Leads",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1920,
+        1380
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "56017e8b-2f2e-4f40-9325-184ea01a18be",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1720,
+        1260
+      ],
+      "parameters": {
+        "width": 1071.752021563343,
+        "height": 285.66037735849045,
+        "content": "## RFRNCS Lead Website Analysis\n\nAnalyzes business websites to identify branding and marketing opportunities for RFRNCS services."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "aa855d7c-6602-4242-bc84-56fed7c27c26",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -600,
+        1260
+      ],
+      "parameters": {
+        "width": 625,
+        "height": 607,
+        "content": "## AI-Powered Lead Analysis\n\nUses GPT-4 to analyze website content and identify RFRNCS service opportunities."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1a38e545-6d3b-40b2-a3ff-6f91fdd772de",
+      "name": "Load Lead Websites",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1640,
+        1380
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "websites-list",
+              "name": "websites",
+              "type": "array",
+              "value": "={{ [\n  'https://www.thirdwavecoffeeroasters.com',\n  'https://www.starbucks.com',\n  'https://www.bluebottlecoffee.com',\n  'https://www.intelligentsiacoffee.com',\n  'https://www.ritualcoffee.com'\n] }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "bd713892-356b-4a9c-b076-000bd4f1f1ba",
+      "name": "Gemini AI Analyzer",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        -380,
+        1600
+      ],
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "credentials": {
+        "googlePalmApi": {
+          "id": "S1FgINMN5qUQ5Z61",
+          "name": "n8n workflow项目2"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4d7359ab-ba87-4756-8168-f2b987aac2fc",
+      "name": "Split Websites into Items",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        -1440,
+        1380
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "websites"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "8342d13f-879d-426b-ba28-ab696dd7f155",
+      "name": "Limit to First 3 Websites",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        -1240,
+        1380
+      ],
+      "parameters": {
+        "maxItems": 3
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a057d3cb-b7fb-4b4d-810a-e4de3ac10702",
+      "name": "Scrape Website Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -840,
+        1380
+      ],
+      "parameters": {
+        "url": "={{ $json }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "98164d8c-3d6f-485d-93b6-1da3e8ae7ca8",
+      "name": "Extract Company Name",
+      "type": "n8n-nodes-base.html",
+      "position": [
+        -340,
+        1080
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "company_name",
+              "cssSelector": "title"
+            },
+            {
+              "key": "meta_description",
+              "attribute": "content",
+              "cssSelector": "meta[name=\"description\"]"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "fc0b6230-d169-4b20-803b-1896982c37c3",
+      "name": "RFRNCS Lead Analysis Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        -340,
+        1380
+      ],
+      "parameters": {
+        "text": "=You are a senior marketing strategist at RFRNCS (https://www.rfrncs.in/), a premier branding and marketing agency specializing in logo design, brand identity, and digital marketing.\n\nAnalyze this company's website content and provide a comprehensive lead assessment. Return ONLY valid JSON with this exact structure:\n\n{\n  \"company_analysis\": {\n    \"company_name\": \"Extracted company name\",\n    \"business_type\": \"What type of business (B2B, B2C, SaaS, etc.)\",\n    \"industry\": \"Industry sector\",\n    \"current_branding\": \"Assessment of their current brand identity\",\n    \"website_quality\": \"Rating of website design and user experience (1-10)\",\n    \"target_audience\": \"Who they serve\",\n    \"pain_points_identified\": [\"List of branding/marketing challenges\"],\n    \"growth_stage\": \"Startup/SMB/Enterprise\"\n  },\n  \"rfrncs_opportunities\": {\n    \"service_fit_score\": \"1-10 rating of how well they need RFRNCS services\",\n    \"recommended_services\": [\"Logo design\", \"Brand identity\", \"Website redesign\", \"Marketing campaigns\"],\n    \"estimated_budget\": \"Budget range for services\",\n    \"urgency_level\": \"high/medium/low\",\n    \"competitive_advantage\": \"Why this is a good client for RFRNCS\",\n    \"conversion_probability\": \"1-10 likelihood of closing\",\n    \"next_steps\": [\"Immediate actions to take\"]\n  },\n  \"lead_scoring\": {\n    \"overall_score\": \"1-100 combined score\",\n    \"priority_level\": \"A/B/C lead priority\",\n    \"follow_up_timeline\": \"When to follow up\",\n    \"key_selling_points\": [\"What to emphasize in pitch\"]\n  }\n}\n\nWebsite URL: {{ $('Limit to First 3 Websites').first().json }}\n\nWebsite Content:\n{{ $json.data }}\n\nFocus on identifying concrete opportunities for RFRNCS branding and marketing services.",
+        "batching": {},
+        "promptType": "define"
+      },
+      "typeVersion": 1.7
+    },
+    {
+      "id": "a656524a-9f77-4922-9de7-e2221ac82b70",
+      "name": "Format Lead Analysis Results",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        360,
+        1380
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7b337b47-a1c6-470e-881f-0c038b4917e5",
+              "name": "company_name",
+              "type": "string",
+              "value": "={{ $json.company_analysis.company_name }}"
+            },
+            {
+              "id": "ca820521-4fff-4971-84b5-e6e2dbd8bb7a",
+              "name": "lead_analysis",
+              "type": "object",
+              "value": "={{ $json }}"
+            },
+            {
+              "id": "0fd9b5e3-44dd-49a3-82c1-3a4aa4698376",
+              "name": "website_url",
+              "type": "string",
+              "value": "={{ $('Limit to First 3 Websites').first().json }}"
+            },
+            {
+              "id": "analysis-timestamp",
+              "name": "analysis_date",
+              "type": "string",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "da738af0-7302-442d-bdc8-c9771be10794",
+      "name": "Merge All Lead Analyses",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        160,
+        1380
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "adf51f27-8d3e-49a8-b850-7990d355dc81",
+      "name": "Website Content Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        -260,
+        1600
+      ],
+      "parameters": {
+        "options": {},
+        "jsonData": "={{ $('Extract Website Text').item.json.data }}",
+        "jsonMode": "expressionData"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "f57c5908-4ae3-4ce1-a74b-0fc393792c21",
+      "name": "Content Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        -180,
+        1720
+      ],
+      "parameters": {
+        "options": {},
+        "chunkSize": 8000
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "278eed78-3489-41e3-b4d2-a2de788fcd21",
+      "name": "Limit to First 3",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        -1040,
+        1380
+      ],
+      "parameters": {
+        "maxItems": 3
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "028147d1-2a45-416d-91d0-40a0af2747f5",
+      "name": "Extract Website Text",
+      "type": "n8n-nodes-base.html",
+      "position": [
+        -520,
+        1380
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "data",
+              "cssSelector": "body",
+              "skipSelectors": "script,style,nav,footer,.footer,.navigation,.nav,header,.header"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "lead-report-generator",
+      "name": "Generate Lead Report",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        560,
+        1380
+      ],
+      "parameters": {
+        "jsCode": "// Generate comprehensive lead analysis report\nconst analyses = $input.all();\n\nlet report = `# RFRNCS LEAD ANALYSIS REPORT\\n\\n`;\nreport += `Generated: ${new Date().toISOString()}\\n\\n`;\nreport += `## LEAD ANALYSIS SUMMARY\\n\\n`;\n\nanalyses.forEach((analysis, index) => {\n  const data = analysis.json.lead_analysis;\n  const company = data.company_analysis;\n  const opportunities = data.rfrncs_opportunities;\n  const scoring = data.lead_scoring;\n  \n  report += `### ${index + 1}. ${company.company_name}\\n`;\n  report += `**Website:** ${analysis.json.website_url}\\n`;\n  report += `**Business Type:** ${company.business_type}\\n`;\n  report += `**Industry:** ${company.industry}\\n`;\n  report += `**Growth Stage:** ${company.growth_stage}\\n\\n`;\n  \n  report += `**Current Branding Assessment:** ${company.current_branding}\\n`;\n  report += `**Website Quality Score:** ${company.website_quality}/10\\n`;\n  report += `**Target Audience:** ${company.target_audience}\\n\\n`;\n  \n  report += `**RFRNCS OPPORTUNITIES**\\n`;\n  report += `- **Service Fit Score:** ${opportunities.service_fit_score}/10\\n`;\n  report += `- **Recommended Services:** ${opportunities.recommended_services.join(', ')}\\n`;\n  report += `- **Estimated Budget:** ${opportunities.estimated_budget}\\n`;\n  report += `- **Urgency Level:** ${opportunities.urgency_level}\\n`;\n  report += `- **Conversion Probability:** ${opportunities.conversion_probability}/10\\n\\n`;\n  \n  report += `**LEAD SCORING**\\n`;\n  report += `- **Overall Score:** ${scoring.overall_score}/100\\n`;\n  report += `- **Priority Level:** ${scoring.priority_level}\\n`;\n  report += `- **Follow-up Timeline:** ${scoring.follow_up_timeline}\\n`;\n  report += `- **Key Selling Points:** ${scoring.key_selling_points.join(', ')}\\n\\n`;\n  \n  if (company.pain_points_identified && company.pain_points_identified.length > 0) {\n    report += `**Identified Pain Points:**\\n${company.pain_points_identified.map(point => `- ${point}`).join('\\n')}\\n\\n`;\n  }\n  \n  if (opportunities.next_steps && opportunities.next_steps.length > 0) {\n    report += `**Recommended Next Steps:**\\n${opportunities.next_steps.map(step => `- ${step}`).join('\\n')}\\n\\n`;\n  }\n  \n  report += `---\\n\\n`;\n});\n\nreturn { json: { report_content: report, total_leads: analyses.length, analysis_date: new Date().toISOString() } };"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "email-lead-report",
+      "name": "Email Lead Analysis Report",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        760,
+        1380
+      ],
+      "parameters": {
+        "message": "={{ $json.report_content }}",
+        "options": {},
+        "subject": "={{ 'RFRNCS Lead Analysis Report - ' + $json.total_leads + ' Companies Analyzed' }}"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "uY3e74Pt4SFoyVaW",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 2.1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge All Lead Analyses": {
+      "main": [
+        [
+          {
+            "node": "Format Lead Analysis Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Company Name": {
+      "main": [
+        [
+          {
+            "node": "Merge All Lead Analyses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Lead Websites": {
+      "main": [
+        [
+          {
+            "node": "Split Websites into Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit to First 3": {
+      "main": [
+        [
+          {
+            "node": "Scrape Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Website Text": {
+      "main": [
+        [
+          {
+            "node": "RFRNCS Lead Analysis Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Website Content": {
+      "main": [
+        [
+          {
+            "node": "Extract Company Name",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract Website Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini AI Analyzer": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RFRNCS Lead Analysis Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Website Content Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "RFRNCS Lead Analysis Chain",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Websites into Items": {
+      "main": [
+        [
+          {
+            "node": "Limit to First 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RFRNCS Lead Analysis Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge All Lead Analyses",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Manual Trigger - Analyze Leads": {
+      "main": [
+        [
+          {
+            "node": "Load Lead Websites",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Website Content Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Lead Analysis Results": {
+      "main": [
+        [
+          {
+            "node": "Generate Lead Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Lead Report": {
+      "main": [
+        [
+          {
+            "node": "Email Lead Analysis Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
