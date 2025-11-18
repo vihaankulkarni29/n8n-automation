@@ -1,0 +1,683 @@
+{
+  "meta": {
+    "instanceId": "a14364f050ddf078652622522c15b502c09f9ef0c34946b703b7489667faedef",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "RFRNCS Google Maps Lead Generator",
+  "nodes": [
+    {
+      "id": "manual-trigger",
+      "name": "Generate RFRNCS Leads",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1920,
+        540
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "settings-config",
+      "name": "RFRNCS Settings",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1640,
+        540
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "gs-url",
+              "name": "gs_url",
+              "type": "string",
+              "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+            },
+            {
+              "id": "categories-sheet",
+              "name": "categories_sheet",
+              "type": "string",
+              "value": "RFRNCS Categories"
+            },
+            {
+              "id": "locations-sheet",
+              "name": "locations_sheet",
+              "type": "string",
+              "value": "Target Cities"
+            },
+            {
+              "id": "results-sheet",
+              "name": "results_sheet",
+              "type": "string",
+              "value": "RFRNCS Leads"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "load-categories",
+      "name": "Load RFRNCS Categories",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1440,
+        540
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "categories-list",
+              "name": "categories",
+              "type": "array",
+              "value": "={{ [\n  'graphic design agency',\n  'branding agency',\n  'logo design company',\n  'marketing agency',\n  'digital marketing agency',\n  'web design company',\n  'advertising agency',\n  'creative agency',\n  'brand consulting',\n  'visual design studio',\n  'startup branding',\n  'corporate identity design',\n  'brand strategy consulting',\n  'digital branding agency',\n  'brand identity firm'\n] }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "load-locations",
+      "name": "Load Target Locations",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1440,
+        720
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "locations-list",
+              "name": "locations",
+              "type": "array",
+              "value": "={{ [\n  'Mumbai, Maharashtra, India',\n  'Delhi, India',\n  'Bangalore, Karnataka, India',\n  'Chennai, Tamil Nadu, India',\n  'Pune, Maharashtra, India',\n  'Hyderabad, Telangana, India',\n  'Ahmedabad, Gujarat, India',\n  'Kolkata, West Bengal, India',\n  'Jaipur, Rajasthan, India',\n  'Surat, Gujarat, India'\n] }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "loop-categories",
+      "name": "Loop Categories",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        -1240,
+        540
+      ],
+      "parameters": {
+        "options": {},
+        "batchSize": 1
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "loop-locations",
+      "name": "Loop Locations",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        -1040,
+        540
+      ],
+      "parameters": {
+        "options": {},
+        "batchSize": 1
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "google-maps-search",
+      "name": "Google Maps Business Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -840,
+        540
+      ],
+      "parameters": {
+        "url": "https://places.googleapis.com/v1/places:searchText",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "textQuery",
+              "value": "={{ $('Loop Categories').item.json.categories + ' in ' + $('Loop Locations').item.json.locations }}"
+            },
+            {
+              "name": "maxResultCount",
+              "value": "10"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Goog-FieldMask",
+              "value": "places.id,places.displayName,places.formattedAddress,places.primaryType,places.primaryTypeDisplayName,places.types,places.location,places.nationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.editorialSummary,places.reviews,places.attributions"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "google-maps-api-key",
+          "name": "Google Maps API Key"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "process-businesses",
+      "name": "Process Business Results",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -640,
+        540
+      ],
+      "parameters": {
+        "jsCode": "// Process Google Maps API response\nconst response = $input.item.json;\nconst businesses = response.body?.places || [];\n\n// Filter for businesses with websites (higher quality leads)\nconst qualifiedBusinesses = businesses.filter(business => {\n  return business.websiteUri && \n         business.nationalPhoneNumber && \n         business.rating && \n         business.userRatingCount > 5;\n});\n\n// Transform to RFRNCS lead format\nconst leads = qualifiedBusinesses.map(business => ({\n  json: {\n    business_name: business.displayName?.text || '',\n    address: business.formattedAddress || '',\n    phone: business.nationalPhoneNumber || '',\n    website: business.websiteUri || '',\n    rating: business.rating || 0,\n    review_count: business.userRatingCount || 0,\n    business_type: business.primaryTypeDisplayName || '',\n    categories: business.types || [],\n    latitude: business.location?.latitude || 0,\n    longitude: business.location?.longitude || 0,\n    place_id: business.id || '',\n    search_category: $('Loop Categories').item.json.categories,\n    search_location: $('Loop Locations').item.json.locations,\n    lead_source: 'Google Maps API',\n    discovery_date: new Date().toISOString(),\n    rfrncs_potential: true\n  }\n}));\n\nreturn leads;"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "remove-duplicates",
+      "name": "Remove Duplicate Leads",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "position": [
+        -440,
+        540
+      ],
+      "parameters": {
+        "compare": "selectedFields",
+        "options": {},
+        "fieldsToCompare": "place_id"
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "lead-qualification",
+      "name": "RFRNCS Lead Qualification",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -240,
+        540
+      ],
+      "parameters": {
+        "jsCode": "// Qualify leads for RFRNCS services\nconst lead = $input.item.json;\n\n// RFRNCS service keywords\nconst brandingKeywords = ['design', 'brand', 'logo', 'creative', 'marketing', 'advertising', 'digital', 'agency', 'studio'];\nconst businessName = lead.business_name.toLowerCase();\nconst businessType = lead.business_type.toLowerCase();\nconst categories = lead.categories.map(cat => cat.toLowerCase());\n\n// Check if business is already in branding/marketing\nlet isBrandingBusiness = false;\nlet serviceRelevance = 0;\n\n// Check business name for branding keywords\nbrandingKeywords.forEach(keyword => {\n  if (businessName.includes(keyword)) {\n    serviceRelevance += 3;\n    isBrandingBusiness = true;\n  }\n});\n\n// Check business type\nbrandingKeywords.forEach(keyword => {\n  if (businessType.includes(keyword)) {\n    serviceRelevance += 2;\n    isBrandingBusiness = true;\n  }\n});\n\n// Check categories\ncategories.forEach(category => {\n  brandingKeywords.forEach(keyword => {\n    if (category.includes(keyword)) {\n      serviceRelevance += 1;\n      isBrandingBusiness = true;\n    }\n  });\n});\n\n// Additional scoring factors\nconst rating = lead.rating || 0;\nconst reviewCount = lead.review_count || 0;\n\n// Quality score (0-10)\nlet qualityScore = 0;\nif (rating >= 4.0) qualityScore += 3;\nelse if (rating >= 3.0) qualityScore += 2;\nelse if (rating >= 2.0) qualityScore += 1;\n\nif (reviewCount > 50) qualityScore += 3;\nelse if (reviewCount > 20) qualityScore += 2;\nelse if (reviewCount > 5) qualityScore += 1;\n\n// Size indicators (larger businesses more likely to need professional services)\nif (reviewCount > 100) qualityScore += 2;\n\n// RFRNCS opportunity score (0-10)\nconst opportunityScore = Math.min(10, serviceRelevance + Math.floor(qualityScore / 2));\n\n// Lead priority (A = highest, C = lowest)\nlet priority = 'C';\nif (opportunityScore >= 7) priority = 'A';\nelse if (opportunityScore >= 4) priority = 'B';\n\nreturn {\n  ...lead,\n  is_branding_business: isBrandingBusiness,\n  service_relevance_score: serviceRelevance,\n  quality_score: qualityScore,\n  opportunity_score: opportunityScore,\n  lead_priority: priority,\n  rfrncs_services_needed: isBrandingBusiness ? 'Potential client' : 'May need services',\n  qualification_date: new Date().toISOString()\n};"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "filter-high-potential",
+      "name": "Filter High-Potential Leads",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -40,
+        540
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "high-priority",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.lead_priority }}",
+              "rightValue": "A"
+            },
+            {
+              "id": "medium-priority",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.lead_priority }}",
+              "rightValue": "B"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "website-analysis-integration",
+      "name": "Trigger Website Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        160,
+        540
+      ],
+      "parameters": {
+        "url": "http://localhost:5678/webhook/rfrncs-website-lead-analyzer",
+        "method": "POST",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "leads",
+              "value": "={{ [$json] }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "store-leads-sheets",
+      "name": "Store Leads in Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        360,
+        540
+      ],
+      "parameters": {
+        "columns": {
+          "value": {
+            "business_name": "={{ $json.business_name }}",
+            "website": "={{ $json.website }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "rating": "={{ $json.rating }}",
+            "review_count": "={{ $json.review_count }}",
+            "business_type": "={{ $json.business_type }}",
+            "lead_priority": "={{ $json.lead_priority }}",
+            "opportunity_score": "={{ $json.opportunity_score }}",
+            "service_relevance": "={{ $json.service_relevance_score }}",
+            "quality_score": "={{ $json.quality_score }}",
+            "search_category": "={{ $json.search_category }}",
+            "search_location": "={{ $json.search_location }}",
+            "discovery_date": "={{ $json.discovery_date }}",
+            "place_id": "={{ $json.place_id }}"
+          },
+          "schema": [
+            {
+              "id": "business_name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Business Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "website",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Phone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rating",
+              "type": "number",
+              "display": true,
+              "required": false,
+              "displayName": "Rating",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "review_count",
+              "type": "number",
+              "display": true,
+              "required": false,
+              "displayName": "Review Count",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business_type",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Business Type",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lead_priority",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Lead Priority",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "opportunity_score",
+              "type": "number",
+              "display": true,
+              "required": false,
+              "displayName": "Opportunity Score",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "service_relevance",
+              "type": "number",
+              "display": true,
+              "required": false,
+              "displayName": "Service Relevance",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quality_score",
+              "type": "number",
+              "display": true,
+              "required": false,
+              "displayName": "Quality Score",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "search_category",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Search Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "search_location",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Search Location",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "discovery_date",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Discovery Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "place_id",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Place ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "place_id"
+          ]
+        },
+        "options": {},
+        "operation": "appendOrUpdate",
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('RFRNCS Settings').item.json.results_sheet }}"
+        },
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "={{ $('RFRNCS Settings').item.json.gs_url }}"
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-rfrncs",
+          "name": "Google Sheets - RFRNCS"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "generate-summary",
+      "name": "Generate Lead Generation Summary",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        560,
+        540
+      ],
+      "parameters": {
+        "jsCode": "// Generate summary of lead generation results\nconst results = $input.all();\n\nlet summary = `# RFRNCS Lead Generation Summary\\n\\n`;\nsummary += `Generated: ${new Date().toISOString()}\\n\\n`;\nsummary += `## 📊 Lead Generation Results\\n\\n`;\n\n// Statistics\nconst totalLeads = results.length;\nconst highPriority = results.filter(r => r.json.lead_priority === 'A').length;\nconst mediumPriority = results.filter(r => r.json.lead_priority === 'B').length;\nconst lowPriority = results.filter(r => r.json.lead_priority === 'C').length;\nconst avgOpportunityScore = results.reduce((sum, r) => sum + (r.json.opportunity_score || 0), 0) / totalLeads;\n\nconst categories = [...new Set(results.map(r => r.json.search_category))];\nconst locations = [...new Set(results.map(r => r.json.search_location))];\n\nsummary += `### 📈 Key Metrics\\n`;\nsummary += `- **Total Leads Found:** ${totalLeads}\\n`;\nsummary += `- **High Priority (A):** ${highPriority}\\n`;\nsummary += `- **Medium Priority (B):** ${mediumPriority}\\n`;\nsummary += `- **Low Priority (C):** ${lowPriority}\\n`;\nsummary += `- **Average Opportunity Score:** ${avgOpportunityScore.toFixed(1)}/10\\n\\n`;\n\nsummary += `### 🎯 Search Coverage\\n`;\nsummary += `- **Categories Searched:** ${categories.length}\\n`;\nsummary += `- **Locations Covered:** ${locations.length}\\n\\n`;\n\nsummary += `### 📋 Top Performing Leads\\n\\n`;\n\nconst topLeads = results\n  .filter(r => r.json.lead_priority === 'A')\n  .sort((a, b) => (b.json.opportunity_score || 0) - (a.json.opportunity_score || 0))\n  .slice(0, 5);\n\ntopLeads.forEach((lead, index) => {\n  summary += `${index + 1}. **${lead.json.business_name}**\\n`;\n  summary += `   - Priority: ${lead.json.lead_priority}\\n`;\n  summary += `   - Opportunity Score: ${lead.json.opportunity_score}/10\\n`;\n  summary += `   - Website: ${lead.json.website}\\n`;\n  summary += `   - Location: ${lead.json.search_location}\\n\\n`;\n});\n\nsummary += `### 🚀 Next Steps\\n`;\nsummary += `1. Review high-priority leads for immediate outreach\\n`;\nsummary += `2. Website analysis reports will be emailed separately\\n`;\nsummary += `3. Schedule follow-ups for A and B priority leads\\n`;\nsummary += `4. Update CRM with new qualified prospects\\n`;\n\nreturn { json: { summary_report: summary, total_leads: totalLeads, high_priority_leads: highPriority } };"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "email-summary",
+      "name": "Email Lead Summary",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        760,
+        540
+      ],
+      "parameters": {
+        "message": "={{ $json.summary_report }}",
+        "options": {},
+        "subject": "={{ 'RFRNCS Lead Generation: ' + $json.total_leads + ' Leads Found (' + $json.high_priority_leads + ' High Priority)' }}"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-rfrncs",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 2.1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Generate RFRNCS Leads": {
+      "main": [
+        [
+          {
+            "node": "RFRNCS Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RFRNCS Settings": {
+      "main": [
+        [
+          {
+            "node": "Load RFRNCS Categories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Load Target Locations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load RFRNCS Categories": {
+      "main": [
+        [
+          {
+            "node": "Loop Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Target Locations": {
+      "main": [
+        [
+          {
+            "node": "Loop Locations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Categories": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Loop Locations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Locations": {
+      "main": [
+        [
+          {
+            "node": "Google Maps Business Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Business Search": {
+      "main": [
+        [
+          {
+            "node": "Process Business Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Business Results": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicate Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicate Leads": {
+      "main": [
+        [
+          {
+            "node": "RFRNCS Lead Qualification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RFRNCS Lead Qualification": {
+      "main": [
+        [
+          {
+            "node": "Filter High-Potential Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter High-Potential Leads": {
+      "main": [
+        [
+          {
+            "node": "Trigger Website Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Website Analysis": {
+      "main": [
+        [
+          {
+            "node": "Store Leads in Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Leads in Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Generate Lead Generation Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Lead Generation Summary": {
+      "main": [
+        [
+          {
+            "node": "Email Lead Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
