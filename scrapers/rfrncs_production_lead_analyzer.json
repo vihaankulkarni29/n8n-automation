@@ -1,0 +1,341 @@
+{
+  "name": "RFRNCS Webhook Lead Analyzer - Production Ready",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rfrncs-leads",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "rfrncs-leads"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and validate CSV data from webhook\\nconst body = $input.item.json.body || $input.item.json;\\nlet csvText = '';\\n\\n// Handle different CSV input formats\\nif (body.csv) {\\n  csvText = body.csv;\\n} else if (body.csv_content) {\\n  csvText = body.csv_content;\\n} else if ($binary && $binary.data) {\\n  const csvData = $binary.data.data;\\n  csvText = Buffer.from(csvData, 'base64').toString('utf-8');\\n} else if (Array.isArray(body)) {\\n  // Convert JSON array to CSV\\n  const headers = Object.keys(body[0] || {});\\n  csvText = headers.join(',') + '\\n';\\n  body.forEach(row => {\\n    const values = headers.map(h => `\"${(row[h] || '').toString().replace(/\\\"/g, '\\\\\"')}\"`);\\n    csvText += values.join(',') + '\\n';\\n  });\\n} else {\\n  throw new Error('No CSV data found. Expected format: {csv: \\\"...\\\"}');\\n}\\n\\n// Validate CSV has content\\nif (!csvText || csvText.trim().length < 10) {\\n  throw new Error('CSV data is empty or too short');\\n}\\n\\nreturn [{\\n  json: {\\n    csv_text: csvText.trim(),\\n    received_at: new Date().toISOString(),\\n    source: body.source || 'webhook'\\n  }\\n}];"
+      },
+      "name": "Extract CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Robust CSV parsing with error handling\\nconst csvText = $json.csv_text;\\nconst lines = csvText.split('\\n').filter(line => line.trim());\\n\\nif (lines.length < 2) {\\n  throw new Error('CSV must have at least a header row and one data row');\\n}\\n\\n// Simple CSV parser (for production, consider using papaparse)\\nconst parseCSVLine = (line) => {\\n  const result = [];\\n  let current = '';\\n  let inQuotes = false;\\n  \\n  for (let i = 0; i < line.length; i++) {\\n    const char = line[i];\\n    \\n    if (char === '\"') {\\n      if (inQuotes && line[i + 1] === '\"') {\\n        current += '\"';\\n        i++;\\n      } else {\\n        inQuotes = !inQuotes;\\n      }\\n    } else if (char === ',' && !inQuotes) {\\n      result.push(current.trim());\\n      current = '';\\n    } else {\\n      current += char;\\n    }\\n  }\\n  result.push(current.trim());\\n  return result;\\n};\\n\\nconst headers = parseCSVLine(lines[0]).map(h => h.trim());\\nconst results = [];\\n\\nfor (let i = 1; i < lines.length; i++) {\\n  const values = parseCSVLine(lines[i]);\\n  const row = {};\\n  headers.forEach((header, index) => {\\n    row[header] = values[index] || '';\\n  });\\n  results.push({ json: row });\\n}\\n\\nreturn results;"
+      },
+      "name": "Parse CSV",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "Process Each Lead",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1040, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize lead data for analysis\\nconst lead = $json;\\n\\n// Try multiple field name variations\\nconst companyName = lead.name || lead.company || lead.company_name || lead.Name || lead.Company || 'Unknown Company';\\nconst website = lead.website || lead.url || lead.Website || lead.URL || '';\\nconst description = lead.description || lead.about || lead.desc || lead.Description || lead.About || '';\\n\\nreturn [{\\n  json: {\\n    company_name: companyName,\\n    website: website,\\n    description: description,\\n    original_data: lead\\n  }\\n}];"
+      },
+      "name": "Prepare Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1240, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 2000
+        }
+      },
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1440, 480]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior business development consultant at RFRNCS, a premier branding and marketing agency specializing in brand identity, logo design, website design, marketing strategy, and digital presence enhancement.\\n\\nAnalyze this company comprehensively:\\n\\nCompany: {{ $json.company_name }}\\nWebsite: {{ $json.website }}\\nDescription: {{ $json.description }}\\n\\nCRITICAL INSTRUCTIONS:\\n1. Return ONLY a valid JSON object\\n2. Do NOT wrap in markdown code blocks\\n3. Use EXACTLY these field names (case-sensitive)\\n4. Do NOT add any other fields\\n\\nRequired JSON structure:\\n{\\n  \\\"company_overview\\\": \\\"Brief 2-3 sentence summary of what the company does\\\",\\n  \\\"products_services\\\": [\\\"Product/Service 1\\\", \\\"Product/Service 2\\\", \\\"Product/Service 3\\\"],\\n  \\\"target_market\\\": \\\"Description of their target customers and market segment\\\",\\n  \\\"business_model\\\": \\\"How they generate revenue and operate\\\",\\n  \\\"industry\\\": \\\"Primary industry category\\\",\\n  \\\"key_features\\\": [\\\"Feature 1\\\", \\\"Feature 2\\\", \\\"Feature 3\\\"],\\n  \\\"competitive_advantage\\\": \\\"What makes them unique or stand out\\\",\\n  \\\"fit_score\\\": 7,\\n  \\\"needs_branding_services\\\": true,\\n  \\\"recommended_services\\\": [\\\"Brand Identity\\\", \\\"Website Design\\\", \\\"Logo Design\\\"],\\n  \\\"budget_potential\\\": \\\"$10,000 - $50,000\\\",\\n  \\\"urgency_level\\\": \\\"medium\\\",\\n  \\\"conversion_probability\\\": \\\"65%\\\",\\n  \\\"reasoning\\\": \\\"Detailed 3-4 sentence explanation of why this company needs RFRNCS services and their readiness to invest\\\",\\n  \\\"next_steps\\\": [\\\"Step 1: Initial outreach\\\", \\\"Step 2: Portfolio presentation\\\", \\\"Step 3: Discovery call\\\"],\\n  \\\"full_report\\\": \\\"# Company Analysis\\\\n\\\\nComprehensive markdown report with detailed findings, market position, growth potential, and strategic recommendations for RFRNCS engagement.\\\"\\n}\\n\\nRules:\\n- fit_score: Integer from 1-10 (10 = perfect fit)\\n- needs_branding_services: Boolean (true/false)\\n- urgency_level: Must be \\\"high\\\", \\\"medium\\\", or \\\"low\\\"\\n- All arrays must contain at least 2 items\\n- All strings must be meaningful, not \\\"Not specified\\\"\\n\\nReturn ONLY the JSON object with no additional text.",
+        "options": {
+          "systemMessage": "You are a JSON-generating business analyst. You MUST return only valid JSON with no markdown formatting, no explanations, and no additional text. Follow the exact schema provided."
+        },
+        "hasOutputParser": true
+      },
+      "name": "AI Analysis Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [1440, 300]
+    },
+    {
+      "parameters": {
+        "schemaType": "fromJson",
+        "jsonSchema": "={\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"properties\\\": {\\n    \\\"company_overview\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"products_services\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}},\\n    \\\"target_market\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"business_model\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"industry\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"key_features\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}},\\n    \\\"competitive_advantage\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"fit_score\\\": {\\\"type\\\": \\\"number\\\"},\\n    \\\"needs_branding_services\\\": {\\\"type\\\": \\\"boolean\\\"},\\n    \\\"recommended_services\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}},\\n    \\\"budget_potential\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"urgency_level\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"conversion_probability\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"reasoning\\\": {\\\"type\\\": \\\"string\\\"},\\n    \\\"next_steps\\\": {\\\"type\\\": \\\"array\\\", \\\"items\\\": {\\\"type\\\": \\\"string\\\"}},\\n    \\\"full_report\\\": {\\\"type\\\": \\\"string\\\"}\\n  },\\n  \\\"required\\\": [\\\"company_overview\\\", \\\"fit_score\\\"]\\n}"
+      },
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [1440, 120]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse and normalize AI output with robust error handling\\nconst aiOutput = $json.output || $json.text || $json;\\nlet parsedData;\\n\\n// Extract JSON from response\\nlet jsonText = typeof aiOutput === 'string' ? aiOutput : JSON.stringify(aiOutput);\\n\\n// Remove markdown code blocks if present\\njsonText = jsonText.replace(/```json\\\\s*/g, '').replace(/```\\\\s*/g, '').trim();\\n\\n// Try to parse JSON\\ntry {\\n  parsedData = JSON.parse(jsonText);\\n} catch (e) {\\n  // If parsing fails, try to extract JSON object\\n  const jsonMatch = jsonText.match(/\\\\{[\\\\s\\\\S]*\\\\}/);\\n  if (jsonMatch) {\\n    try {\\n      parsedData = JSON.parse(jsonMatch[0]);\\n    } catch (e2) {\\n      throw new Error('Failed to parse AI output as JSON: ' + e2.message);\\n    }\\n  } else {\\n    throw new Error('No JSON object found in AI output');\\n  }\\n}\\n\\n// Helper function to safely convert arrays\\nconst toArray = (value) => {\\n  if (Array.isArray(value)) return value;\\n  if (typeof value === 'string') return value.split(';').map(s => s.trim()).filter(Boolean);\\n  return [];\\n};\\n\\n// Helper function to ensure array has minimum items\\nconst ensureArray = (arr, minItems = 2, fallback = 'Item') => {\\n  const result = toArray(arr);\\n  while (result.length < minItems) {\\n    result.push(`${fallback} ${result.length + 1}`);\\n  }\\n  return result;\\n};\\n\\n// Normalize to expected schema with intelligent field mapping\\nconst normalized = {\\n  company_overview: parsedData.company_overview || parsedData.Description || parsedData.CompanyOverview || parsedData.overview || 'Company analysis pending',\\n  \\n  products_services: ensureArray(\\n    parsedData.products_services || parsedData.ProductsServices || parsedData.CuisineTypes || parsedData.products,\\n    2,\\n    'Service'\\n  ),\\n  \\n  target_market: parsedData.target_market || parsedData.TargetMarket || parsedData.target_customers || 'General market',\\n  \\n  business_model: parsedData.business_model || parsedData.BusinessModel || parsedData.revenue_model || 'B2C/B2B model',\\n  \\n  industry: parsedData.industry || parsedData.Industry || parsedData.sector || 'Service Industry',\\n  \\n  key_features: ensureArray(\\n    parsedData.key_features || parsedData.KeyFeatures || parsedData.features,\\n    2,\\n    'Feature'\\n  ),\\n  \\n  competitive_advantage: parsedData.competitive_advantage || parsedData.CompetitiveAdvantage || parsedData.advantage || 'Unique market position',\\n  \\n  // RFRNCS-specific scoring\\n  fit_score: parseInt(parsedData.fit_score || parsedData.score || 5),\\n  \\n  needs_branding_services: parsedData.needs_branding_services ?? parsedData.needs_services ?? true,\\n  \\n  recommended_services: ensureArray(\\n    parsedData.recommended_services || parsedData.services,\\n    2,\\n    'Branding Service'\\n  ),\\n  \\n  budget_potential: parsedData.budget_potential || parsedData.budget || '$5,000 - $25,000',\\n  \\n  urgency_level: (parsedData.urgency_level || 'medium').toLowerCase(),\\n  \\n  conversion_probability: parsedData.conversion_probability || parsedData.probability || '50%',\\n  \\n  reasoning: parsedData.reasoning || parsedData.analysis || parsedData.Notes || 'Further analysis recommended',\\n  \\n  next_steps: ensureArray(\\n    parsedData.next_steps || parsedData.actions,\\n    2,\\n    'Action step'\\n  ),\\n  \\n  full_report: parsedData.full_report || `# ${$('Prepare Lead').item.json.company_name}\\\\n\\\\n${JSON.stringify(parsedData, null, 2)}`\\n};\\n\\n// Add metadata\\nconst leadData = $('Prepare Lead').item.json;\\n\\nreturn [{\\n  json: {\\n    ...normalized,\\n    company_name: leadData.company_name,\\n    website: leadData.website,\\n    analysis_date: new Date().toISOString(),\\n    original_data: leadData.original_data\\n  }\\n}];"
+      },
+      "name": "Parse & Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1640, 300]
+    },
+    {
+      "parameters": {},
+      "name": "Merge All Results",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1840, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Convert analysis results to properly formatted CSV\\nconst analyses = $input.all().map(item => item.json);\\n\\n// CSV headers\\nconst headers = [\\n  'Company Name',\\n  'Website',\\n  'Company Overview',\\n  'Products/Services',\\n  'Target Market',\\n  'Business Model',\\n  'Industry',\\n  'Key Features',\\n  'Competitive Advantage',\\n  'Fit Score',\\n  'Needs Branding',\\n  'Recommended Services',\\n  'Budget Potential',\\n  'Urgency',\\n  'Conversion %',\\n  'Reasoning',\\n  'Next Steps',\\n  'Analysis Date'\\n];\\n\\n// Helper to escape CSV values\\nconst escapeCSV = (value) => {\\n  if (value === null || value === undefined) return '';\\n  const str = String(value);\\n  if (str.includes(',') || str.includes('\\\"') || str.includes('\\\\n')) {\\n    return `\\\"${str.replace(/\\\"/g, '\\\\\"')}\\\"`;\\n  }\\n  return str;\\n};\\n\\n// Helper to convert arrays to string\\nconst arrayToString = (arr) => {\\n  if (Array.isArray(arr)) {\\n    return arr.join('; ');\\n  }\\n  return arr || '';\\n};\\n\\n// Build CSV content\\nlet csvContent = headers.join(',') + '\\\\n';\\n\\nanalyses.forEach(analysis => {\\n  const row = [\\n    escapeCSV(analysis.company_name),\\n    escapeCSV(analysis.website),\\n    escapeCSV(analysis.company_overview),\\n    escapeCSV(arrayToString(analysis.products_services)),\\n    escapeCSV(analysis.target_market),\\n    escapeCSV(analysis.business_model),\\n    escapeCSV(analysis.industry),\\n    escapeCSV(arrayToString(analysis.key_features)),\\n    escapeCSV(analysis.competitive_advantage),\\n    escapeCSV(analysis.fit_score),\\n    escapeCSV(analysis.needs_branding_services),\\n    escapeCSV(arrayToString(analysis.recommended_services)),\\n    escapeCSV(analysis.budget_potential),\\n    escapeCSV(analysis.urgency_level),\\n    escapeCSV(analysis.conversion_probability),\\n    escapeCSV(analysis.reasoning),\\n    escapeCSV(arrayToString(analysis.next_steps)),\\n    escapeCSV(analysis.analysis_date)\\n  ];\\n  \\n  csvContent += row.join(',') + '\\\\n';\\n});\\n\\n// Calculate summary statistics\\nconst avgFitScore = (analyses.reduce((sum, a) => sum + (a.fit_score || 0), 0) / analyses.length).toFixed(1);\\nconst highFitLeads = analyses.filter(a => a.fit_score >= 7).length;\\nconst needsBranding = analyses.filter(a => a.needs_branding_services).length;\\n\\nreturn [{\\n  json: {\\n    csv_content: csvContent,\\n    total_leads: analyses.length,\\n    high_fit_leads: highFitLeads,\\n    needs_branding_count: needsBranding,\\n    average_fit_score: avgFitScore,\\n    generated_at: new Date().toISOString()\\n  }\\n}];"
+      },
+      "name": "Generate CSV Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2040, 300]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {
+          "fileName": "=rfrncs_lead_analysis_{{ $now.format('YYYY-MM-DD_HHmmss') }}.csv",
+          "mimeType": "text/csv"
+        }
+      },
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [2240, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "vihaankulkarni29@gmail.com",
+        "toEmail": "vihaankulkarni29@gmail.com",
+        "subject": "=🎯 RFRNCS Lead Analysis Complete: {{ $json.total_leads }} Leads | {{ $json.high_fit_leads }} High-Fit",
+        "emailType": "html",
+        "message": "=<h2>RFRNCS Lead Analysis Report</h2>\\n\\n<p><strong>Analysis Summary:</strong></p>\\n<ul>\\n  <li>Total Leads Processed: <strong>{{ $json.total_leads }}</strong></li>\\n  <li>High-Fit Leads (Score ≥7): <strong>{{ $json.high_fit_leads }}</strong></li>\\n  <li>Need Branding Services: <strong>{{ $json.needs_branding_count }}</strong></li>\\n  <li>Average Fit Score: <strong>{{ $json.average_fit_score }}/10</strong></li>\\n</ul>\\n\\n<p><strong>Generated:</strong> {{ $json.generated_at }}</p>\\n\\n<p>The attached CSV contains detailed company analysis, RFRNCS service fit assessment, budget estimates, and recommended next steps for each lead.</p>\\n\\n<p><em>Powered by RFRNCS AI Lead Analyzer</em></p>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "data"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Email Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2440, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.fit_score }}",
+              "operation": "largerEqual",
+              "value2": 8
+            }
+          ]
+        }
+      },
+      "name": "Filter High-Priority Leads",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1840, 500]
+    },
+    {
+      "parameters": {
+        "width": 580,
+        "height": 280,
+        "content": "## 🎯 RFRNCS Webhook Lead Analyzer\\n\\n**Production-Ready AI Lead Analysis System**\\n\\nThis workflow automatically:\\n1. Receives lead data via webhook (CSV or JSON)\\n2. Analyzes each company using GPT-4\\n3. Scores leads for RFRNCS services fit\\n4. Generates comprehensive CSV report\\n5. Emails results to your team\\n\\n**Setup Required:**\\n- OpenAI API credentials\\n- Email SMTP credentials\\n- Update webhook path if needed"
+      },
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-60, 140]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Response": {
+      "main": [
+        [
+          {
+            "node": "Extract CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract CSV": {
+      "main": [
+        [
+          {
+            "node": "Parse CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse CSV": {
+      "main": [
+        [
+          {
+            "node": "Process Each Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Lead": {
+      "main": [
+        [
+          {
+            "node": "Prepare Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Lead": {
+      "main": [
+        [
+          {
+            "node": "AI Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse & Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Normalize": {
+      "main": [
+        [
+          {
+            "node": "Merge All Results",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter High-Priority Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge All Results": {
+      "main": [
+        [
+          {
+            "node": "Generate CSV Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate CSV Report": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Analysis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Analysis Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}
